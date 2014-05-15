@@ -66,12 +66,12 @@ public class LockAndKeyItem extends Item {
 				int slot = player.inventory.currentItem;
 				int count = cur.stackSize;
 				
-				if (count > 1) {
-					cur.stackSize--;
-					slot = player.inventory.getFirstEmptyStack();
-				}
-				
-				player.inventory.setInventorySlotContents(slot, new ItemStack(SecureItMod.keyItem));
+				if (player.inventory.consumeInventoryItem(this))
+					
+				if (slot > -1)
+					player.inventory.setInventorySlotContents(slot, new ItemStack(SecureItMod.keyItem));
+				else
+					player.dropItem(SecureItMod.keyItem, 1);
 			}
 		}
 	}

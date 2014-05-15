@@ -46,24 +46,6 @@ public class KeyItem extends Item {
 	
 	@SubscribeEvent
 	public void onItemUseEvent(PlayerInteractEvent event) {
-		EntityPlayer player = event.entityPlayer;
-		World world = player.worldObj;
 		
-		if (player.getCurrentEquippedItem().getItem().equals(this) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-			Block block = world.getBlock(event.x, event.y, event.z);
-			if (block instanceof BlockChest) {
-				BlockChest chest = (BlockChest) block;
-				event.useBlock = Result.DENY;
-				int slot = player.inventory.currentItem;
-				int count = player.getCurrentEquippedItem().stackSize;
-				
-				if (count > 1) {
-					player.getCurrentEquippedItem().stackSize--;
-					slot = player.inventory.getFirstEmptyStack();
-				}
-				
-				player.inventory.setInventorySlotContents(slot, new ItemStack(SecureItMod.keyItem));
-			}
-		}
 	}
 }
