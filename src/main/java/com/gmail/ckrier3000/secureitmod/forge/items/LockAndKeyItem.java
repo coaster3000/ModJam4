@@ -5,6 +5,7 @@ import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.client.gui.ChatLine;
@@ -13,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
@@ -69,7 +71,8 @@ public class LockAndKeyItem extends Item {
 
 		if (world.getBlock(x, y, z) instanceof BlockChest) {
 			BlockChest chest = (BlockChest) world.get(x, y, z);
-			
+			Game
+			world.getTileEntity(x, y, z).writeToNBT();
 			return true; // Prevent's use from what I tested.
 		}
 		return false;
