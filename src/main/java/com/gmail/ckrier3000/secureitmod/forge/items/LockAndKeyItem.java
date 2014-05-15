@@ -7,6 +7,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,28 +52,44 @@ public class LockAndKeyItem extends Item {
 		return stack;
 	}
 	
-	@SubscribeEvent
-	public void onItemUseEvent(PlayerInteractEvent event) {
-		EntityPlayer player = event.entityPlayer;
-		World world = player.worldObj;
+	@Override
+	public boolean onItemUse(ItemStack stack,
+			EntityPlayer player, World world, int x, int y,
+			int z, int side, float hitX, float hitY, float hitZ) {
 		
-		ItemStack cur = player.getCurrentEquippedItem();
-		
-		if (cur != null && cur.getItem().equals(this) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-			Block block = world.getBlock(event.x, event.y, event.z);
-			if (block instanceof BlockChest) {
-				BlockChest chest = (BlockChest) block;
-				event.useBlock = Result.DENY;
-				int slot = player.inventory.currentItem;
-				int count = cur.stackSize;
-				
-				if (player.inventory.consumeInventoryItem(this))
-					
-				if (slot > -1)
-					player.inventory.setInventorySlotContents(slot, new ItemStack(SecureItMod.keyItem));
-				else
-					player.dropItem(SecureItMod.keyItem, 1);
-			}
-		}
+		player.addChatMessage(new ChatComponentText("onItemUse"));
+		return true;
 	}
+	
+	@Override
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player,
+			World world, int x, int y, int z, int side, float hitX, float hitY,
+			float hitZ) {
+		
+		player.addChatMessage(new ChatComponentText("onItemUseFirst"));
+		
+		return ;
+	}
+	
+//	public void onItemUseEvent(PlayerInteractEvent event) {
+//		EntityPlayer player = event.entityPlayer;
+//		World world = player.worldObj;
+//		
+//		ItemStack cur = player.getCurrentEquippedItem();
+//		final int x = event.x, y = event.y, z = event.z;
+//		if (cur != null && cur.getItem().equals(this) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
+//			Block block = world.getBlock(x,y,z);
+//			if (block instanceof BlockChest) {
+//				BlockChest chest = (BlockChest) block;
+//				event.useBlock = Result.DENY;
+//				int slot = player.inventory.currentItem;
+//				int count = cur.stackSize;
+//				
+//				if (player.inventory.consumeInventoryItem(this)) {
+//					
+////				world.setBlock(x,y,z, BLOCK)
+//				}
+//			}
+//		}
+//	}
 }
