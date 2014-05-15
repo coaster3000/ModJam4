@@ -7,6 +7,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class LockAndKeyItem extends Item {
@@ -22,6 +23,7 @@ public class LockAndKeyItem extends Item {
 		
 		if (stack.getItem().getUnlocalizedName().equals(SecureItMod.lockAndKeyItem.getUnlocalizedName())) {
 			player.swingItem();
+			player.attackEntityFrom(DamageSource.magic, 1);
 			
 		}
 		return stack;
