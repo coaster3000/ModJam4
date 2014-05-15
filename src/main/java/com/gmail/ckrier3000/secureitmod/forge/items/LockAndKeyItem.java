@@ -3,6 +3,7 @@ package com.gmail.ckrier3000.secureitmod.forge.items;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -19,6 +21,7 @@ public class LockAndKeyItem extends Item {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
 		setMaxStackSize(64);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	@Override
@@ -44,10 +47,10 @@ public class LockAndKeyItem extends Item {
 		return stack;
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onItemUseEvent(PlayerInteractEvent event) {
-		event.entityPlayer.attackEntityFrom(DamageSource.magic, 1);
-		if (event.entityPlayer.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem)) {
+		EntityPlayer player = event.entityPlayer;
+		if (player.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem)) {
 			
 		}
 	}

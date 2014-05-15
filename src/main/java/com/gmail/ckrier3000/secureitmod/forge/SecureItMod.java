@@ -44,8 +44,5 @@ public class SecureItMod {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(lockAndKeyItem);
-		MinecraftForge.EVENT_BUS.register(keyItem);
-		
 	}
 }

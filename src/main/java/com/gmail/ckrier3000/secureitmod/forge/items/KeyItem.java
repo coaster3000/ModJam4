@@ -15,6 +15,7 @@ public class KeyItem extends Item {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("key");
 		setMaxStackSize(1); 
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	@Override
