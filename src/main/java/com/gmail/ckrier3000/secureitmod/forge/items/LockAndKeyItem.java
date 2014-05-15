@@ -68,6 +68,7 @@ public class LockAndKeyItem extends Item {
 			float hitZ) {
 
 		if (world.getBlock(x, y, z) instanceof BlockChest) {
+			BlockChest chest = (BlockChest) world.get(x, y, z);
 			
 			return true; // Prevent's use from what I tested.
 		}
