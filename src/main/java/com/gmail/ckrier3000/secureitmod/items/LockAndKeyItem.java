@@ -23,8 +23,6 @@ public class LockAndKeyItem extends Item {
 		
 		if (stack.getItem().getUnlocalizedName().equals(SecureItMod.lockAndKeyItem.getUnlocalizedName())) {
 			player.swingItem();
-			player.attackEntityFrom(DamageSource.magic, 1);
-			
 		}
 		return stack;
 	}
