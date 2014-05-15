@@ -1,3 +1,4 @@
 name: Lock And Keys
 version: 1.0
-main: error
+main: com.gmail.ckrier3000.secureitmod.bukkit.SecureItModPlugin
+author: coaster3000
