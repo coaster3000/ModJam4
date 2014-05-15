@@ -8,11 +8,6 @@ buildscript {
             url = "http://files.minecraftforge.net/maven"
         }
 		
-		maven {
-			name = "Bukkit"
-			url = "http://repo.bukkit.org/content/groups/public"
-		}
-		
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
@@ -26,18 +21,18 @@ buildscript {
 
 apply plugin: 'forge'
 
-repositories {
-	maven {
-		name = "Bukkit"
-		url = "http://repo.bukkit.org/content/groups/public"
-	}
-}
-
-dependencies {
-	compile('org.bukkit:bukkit:1.7.2-R0.3') {
-		transitive = true
-	}
-}
+//repositories {
+//	maven {
+//		name = "Bukkit"
+//		url = "http://repo.bukkit.org/content/groups/public"
+//	}
+//}
+//
+//dependencies {
+//	compile('org.bukkit:bukkit:1.7.2-R0.3') {
+//		transitive = true
+//	}
+//}
 
 version = "1.0"
 group= "com.gmail.ckrier3000" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
