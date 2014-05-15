@@ -5,6 +5,8 @@ import javax.annotation.PreDestroy;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
@@ -33,7 +35,6 @@ public class SecureItMod {
 		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
-		
 	}
 	
 	@EventHandler
@@ -43,6 +44,8 @@ public class SecureItMod {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(lockAndKeyItem);
+		MinecraftForge.EVENT_BUS.register(keyItem);
 		
 	}
 }

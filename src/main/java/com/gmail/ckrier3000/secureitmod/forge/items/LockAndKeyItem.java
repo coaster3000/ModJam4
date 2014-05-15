@@ -11,7 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class LockAndKeyItem extends Item {
@@ -19,8 +19,6 @@ public class LockAndKeyItem extends Item {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
 		setMaxStackSize(64);
-		
-		
 	}
 	
 	@Override
@@ -48,6 +46,7 @@ public class LockAndKeyItem extends Item {
 	
 	@EventHandler
 	public void onItemUseEvent(PlayerInteractEvent event) {
+		event.entityPlayer.attackEntityFrom(DamageSource.magic, 1);
 		if (event.entityPlayer.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem)) {
 			
 		}
