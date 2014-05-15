@@ -19,31 +19,31 @@ public class KeyItem extends Item {
 	public KeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("key");
-		setMaxStackSize(1); 
+		setMaxStackSize(1);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
-	
+
 	@Override
 	public boolean isDamageable() {
 		return false;
 	}
-	
+
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass) {
 		return 0;
 	}
-	
+
 	@Override
 	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
 		return 0;
 	}
-	
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
 		return stack;
 	}
-	
+
 	@Override
 	public boolean onItemUse(ItemStack par1ItemStack,
 			EntityPlayer par2EntityPlayer, World par3World, int par4, int par5,

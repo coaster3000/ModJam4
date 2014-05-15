@@ -28,68 +28,50 @@ public class LockAndKeyItem extends Item {
 		setMaxStackSize(64);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
-	
+
 	@Override
 	public boolean isDamageable() {
 		return false;
 	}
-	
+
 	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass) {
 		return 0;
 	}
-	
+
 	@Override
 	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
 		return 0;
 	}
-	
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
-		
+
 		player.swingItem();
 		return stack;
 	}
-	
+
 	@Override
-	public boolean onItemUse(ItemStack stack,
-			EntityPlayer player, World world, int x, int y,
-			int z, int side, float hitX, float hitY, float hitZ) {
-		
-		player.addChatMessage(new ChatComponentText("onItemUse"));
-		return true;
+	public boolean onItemUse(
+			ItemStack stack, // Non interactive blocks.
+			EntityPlayer player, World world, int x, int y, int z, int side,
+			float hitX, float hitY, float hitZ) {
+
+		return false;
 	}
-	
+
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player,
+	public boolean onItemUseFirst(ItemStack stack,
+			EntityPlayer player, // Interactive blocks.
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
-		
-		player.addChatMessage(new ChatComponentText("onItemUseFirst"));
-		
-		return ;
+
+		if (world.getBlock(x, y, z) instanceof BlockChest) {
+			
+			return true; // Prevent's use from what I tested.
+		}
+		return false;
 	}
-	
-//	public void onItemUseEvent(PlayerInteractEvent event) {
-//		EntityPlayer player = event.entityPlayer;
-//		World world = player.worldObj;
-//		
-//		ItemStack cur = player.getCurrentEquippedItem();
-//		final int x = event.x, y = event.y, z = event.z;
-//		if (cur != null && cur.getItem().equals(this) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-//			Block block = world.getBlock(x,y,z);
-//			if (block instanceof BlockChest) {
-//				BlockChest chest = (BlockChest) block;
-//				event.useBlock = Result.DENY;
-//				int slot = player.inventory.currentItem;
-//				int count = cur.stackSize;
-//				
-//				if (player.inventory.consumeInventoryItem(this)) {
-//					
-////				world.setBlock(x,y,z, BLOCK)
-//				}
-//			}
-//		}
-//	}
+
 }
