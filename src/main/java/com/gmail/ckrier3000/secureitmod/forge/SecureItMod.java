@@ -16,7 +16,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = " cSecureItMod",
 	version = "1.7.2-1.0",
-	name = "Secure It Mod")
+	name = "Secure It Mod",
+	bukkitPlugin = "SecureItModPlugin")
 public class SecureItMod {
 	
 	@Instance("cSecureItMod")

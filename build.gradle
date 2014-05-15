@@ -20,11 +20,22 @@ buildscript {
     }
     dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-		classpath 'org.bukkit:bukkit:1.7.2-R0.3'
+		
     }
 }
 
 apply plugin: 'forge'
+
+repositories {
+	maven {
+		name = "Bukkit"
+		url = "http://repo.bukkit.org/content/groups/public"
+	}
+}
+
+dependencies {
+	compile 'org.bukkit:bukkit:1.7.2-R0.3'
+}
 
 version = "1.0"
 group= "com.gmail.ckrier3000" // http://maven.apache.org/guides/mini/guide-naming-conventions.html

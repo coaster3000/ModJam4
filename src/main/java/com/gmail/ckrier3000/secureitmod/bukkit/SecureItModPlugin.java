@@ -1,5 +1,7 @@
 package com.gmail.ckrier3000.secureitmod.bukkit;
 
-public class SecureItModPlugin {
+import org.bukkit.plugin.java.JavaPlugin;
 
+public class SecureItModPlugin extends JavaPlugin {
+	
 }
