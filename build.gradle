@@ -34,7 +34,9 @@ repositories {
 }
 
 dependencies {
-	compile 'org.bukkit:bukkit:1.7.2-R0.3'
+	compile('org.bukkit:bukkit:1.7.2-R0.3') {
+		transitive = true
+	}
 }
 
 version = "1.0"
