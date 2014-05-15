@@ -41,10 +41,6 @@ public class KeyItem extends Item {
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
-		
-		
-		player.swingItem();
-		
 		return stack;
 	}
 	
@@ -53,13 +49,13 @@ public class KeyItem extends Item {
 		EntityPlayer player = event.entityPlayer;
 		World world = player.worldObj;
 		
+		
 		if (player.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
 			Block block = world.getBlock(event.x, event.y, event.z);
 			if (block instanceof BlockChest) {
 				BlockChest chest = (BlockChest) block;
 				event.useBlock = Result.DENY;
 				player.addChatMessage(new ChatComponentText("Text here"));
-				
 			}
 		}
 	}
