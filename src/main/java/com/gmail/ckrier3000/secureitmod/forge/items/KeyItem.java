@@ -50,6 +50,7 @@ public class KeyItem extends Item {
 		World world = player.worldObj;
 		
 		
+		
 		if (player.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
 			Block block = world.getBlock(event.x, event.y, event.z);
 			if (block instanceof BlockChest) {
