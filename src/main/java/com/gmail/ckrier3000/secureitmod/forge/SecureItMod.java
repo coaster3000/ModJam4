@@ -2,7 +2,9 @@ package com.gmail.ckrier3000.secureitmod.forge;
 
 import javax.annotation.PreDestroy;
 
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
@@ -16,8 +18,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(modid = " cSecureItMod",
 	version = "1.7.2-1.0",
-	name = "Secure It Mod",
-	bukkitPlugin = "SecureItModPlugin")
+	name = "Secure It Mod")
 public class SecureItMod {
 	
 	@Instance("cSecureItMod")
@@ -32,6 +33,7 @@ public class SecureItMod {
 		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
+		
 	}
 	
 	@EventHandler

@@ -4,6 +4,7 @@ import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 
 import cpw.mods.fml.common.Mod.EventHandler;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,11 @@ public class LockAndKeyItem extends Item {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
 		setMaxStackSize(64);
+	}
+	
+	@Override
+	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity) {
+		return super.isValidArmor(stack, armorType, entity);
 	}
 	
 	@Override
