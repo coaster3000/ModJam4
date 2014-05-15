@@ -1,6 +1,6 @@
-package com.gmail.ckrier3000.secureitmod.items;
+package com.gmail.ckrier3000.secureitmod.forge.items;
 
-import com.gmail.ckrier3000.secureitmod.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 
 import cpw.mods.fml.common.Mod.EventHandler;
 import net.minecraft.creativetab.CreativeTabs;

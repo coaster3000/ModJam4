@@ -1,11 +1,11 @@
-package com.gmail.ckrier3000.secureitmod;
+package com.gmail.ckrier3000.secureitmod.forge;
 
 import javax.annotation.PreDestroy;
 
 import net.minecraft.item.Item;
 
-import com.gmail.ckrier3000.secureitmod.items.KeyItem;
-import com.gmail.ckrier3000.secureitmod.items.LockAndKeyItem;
+import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
+import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.*;
