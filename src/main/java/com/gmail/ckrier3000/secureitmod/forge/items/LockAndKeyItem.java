@@ -10,9 +10,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.Chat;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
@@ -50,7 +52,7 @@ public class LockAndKeyItem extends Item {
 	@SubscribeEvent
 	public void onItemUseEvent(PlayerInteractEvent event) {
 		EntityPlayer player = event.entityPlayer;
-		if (player.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem)) {
+		if (player.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
 			
 		}
 	}
