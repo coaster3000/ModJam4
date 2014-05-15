@@ -3,6 +3,7 @@ package com.gmail.ckrier3000.secureitmod.forge.items;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 
 import cpw.mods.fml.common.Mod.EventHandler;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,17 +20,25 @@ public class LockAndKeyItem extends Item {
 	}
 	
 	@Override
-	public boolean isValidArmor(ItemStack stack, int armorType, Entity entity) {
-		return super.isValidArmor(stack, armorType, entity);
+	public boolean isDamageable() {
+		return false;
+	}
+	
+	@Override
+	public int getHarvestLevel(ItemStack stack, String toolClass) {
+		return 0;
+	}
+	
+	@Override
+	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
+		return 0;
 	}
 	
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world,
 			EntityPlayer player) {
 		
-		if (stack.getItem().getUnlocalizedName().equals(SecureItMod.lockAndKeyItem.getUnlocalizedName())) {
-			player.swingItem();
-		}
+		player.swingItem();
 		return stack;
 	}
 	
