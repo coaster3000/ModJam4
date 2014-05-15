@@ -26,8 +26,8 @@ public class SecureItMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lock");
-		keyItem = new KeyItem().setTextureName("secureitmod:lockAndKey");
+		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
+		keyItem = new KeyItem().setTextureName("secureitmod:lock");
 		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
