@@ -1,3 +1,7 @@
+
+apply plugin: 'maven'
+apply plugin: 'java'
+
 buildscript {
     repositories {
         mavenCentral()
@@ -18,7 +22,6 @@ buildscript {
     }
     dependencies {
 		classpath 'org.bukkit:Bukkit:1.7.2-R0.3'
-        compile 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
 
