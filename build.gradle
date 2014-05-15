@@ -18,7 +18,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-		classpath 'org.bukkit:Bukkit:1.7.2-R0.3'
+		compile 'org.bukkit:Bukkit:1.7.2-R0.3'
     }
 }
 
