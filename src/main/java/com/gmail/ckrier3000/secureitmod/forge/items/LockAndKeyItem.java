@@ -4,7 +4,9 @@ import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,8 +54,25 @@ public class LockAndKeyItem extends Item {
 	@SubscribeEvent
 	public void onItemUseEvent(PlayerInteractEvent event) {
 		EntityPlayer player = event.entityPlayer;
-		if (player.getCurrentEquippedItem().getItem().equals(SecureItMod.lockAndKeyItem) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-			
+		World world = player.worldObj;
+		
+		ItemStack cur = player.getCurrentEquippedItem();
+		
+		if (cur != null && cur.getItem().equals(this) && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
+			Block block = world.getBlock(event.x, event.y, event.z);
+			if (block instanceof BlockChest) {
+				BlockChest chest = (BlockChest) block;
+				event.useBlock = Result.DENY;
+				int slot = player.inventory.currentItem;
+				int count = cur.stackSize;
+				
+				if (count > 1) {
+					cur.stackSize--;
+					slot = player.inventory.getFirstEmptyStack();
+				}
+				
+				player.inventory.setInventorySlotContents(slot, new ItemStack(SecureItMod.keyItem));
+			}
 		}
 	}
 }
