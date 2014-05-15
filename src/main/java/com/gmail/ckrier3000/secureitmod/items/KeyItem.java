@@ -1,4 +1,4 @@
-package com.gmail.ckrier3000.items;
+package com.gmail.ckrier3000.secureitmod.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

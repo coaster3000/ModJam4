@@ -1,11 +1,11 @@
-package com.gmail.ckrier3000;
+package com.gmail.ckrier3000.secureitmod;
 
 import javax.annotation.PreDestroy;
 
 import net.minecraft.item.Item;
 
-import com.gmail.ckrier3000.items.KeyItem;
-import com.gmail.ckrier3000.items.LockAndKeyItem;
+import com.gmail.ckrier3000.secureitmod.items.KeyItem;
+import com.gmail.ckrier3000.secureitmod.items.LockAndKeyItem;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.*;
@@ -26,8 +26,8 @@ public class SecureItMod {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		lockAndKeyItem = new LockAndKeyItem();
-		keyItem = new KeyItem();
+		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lock");
+		keyItem = new KeyItem().setTextureName("secureitmod:lockAndKey");
 		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
