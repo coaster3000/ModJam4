@@ -5,6 +5,7 @@ import java.util.Random;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -94,23 +95,25 @@ public class LockAndKeyItem extends Item {
 				
 				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
 				
-				NBTTagCompound lockInfo = null;
+				NBTTagCompound lockInfo = new NBTTagCompound();
 				NBTTagList worldLockInfo = null;
 				
+				
+				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
+				
+				teChest.writeToNBT(lockInfo);
+				
+				NBTTagCompound lockTag = null;
+				if (lockInfo.hasKey(COMPOUND_TAG_ID_CHEST_LOCK, NBT.TAG_COMPOUND)) {
+					MessageUtil.message(player, "Lock already exists");
+					return true;
+				}
 				
 				
 				if (worldTags.hasKey(WORLDINFO_TAG_USED_IDS, NBT.TAG_LIST))
 					worldLockInfo = worldTags.getTagList(WORLDINFO_TAG_USED_IDS, NBT.TAG_STRING);
 				else
 					worldLockInfo = new NBTTagList();
-				
-				
-				
-				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
-//				NBTTagCompound lockInfo = new NBTTagCompound();
-//				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
-//				
-//				NBTTagList list = null;
 //				if (worldTags.hasKey(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_LIST))
 //					list = worldTags.getTagList(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_STRING);
 //				else
