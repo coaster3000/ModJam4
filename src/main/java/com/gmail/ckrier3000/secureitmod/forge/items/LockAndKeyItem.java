@@ -102,7 +102,6 @@ public class LockAndKeyItem extends Item {
 				else
 					worldLockInfo = new NBTTagList();
 				
-				lockInfo = teChest.
 				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
 //				NBTTagCompound lockInfo = new NBTTagCompound();
 //				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
