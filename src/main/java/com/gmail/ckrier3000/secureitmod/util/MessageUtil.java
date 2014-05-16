@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
 public class MessageUtil {
-	public static void message(EntityPlayer player, String message) {
+	public static void sendMessage(EntityPlayer player, String message) {
 		player.addChatMessage(new ChatComponentText(message));
 	}
 }
