@@ -1,12 +1,17 @@
 package com.gmail.ckrier3000.secureitmod.forge;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -84,4 +89,30 @@ public class SecureItMod {
 	public void postInit(FMLPostInitializationEvent event) {
 	}
 	
+	public List<String> getUsedIDList(World world) {
+		return getUsedIDList(world.provider.dimensionId);
+	}
+	
+	public List<String> getUsedIDList(int demID) {
+		if (usedLockLists.containsKey(demID)) 
+			return toList(usedLockLists.get(demID));
+		else
+			return Collections.emptyList();
+	}
+	
+	private NBTTagList toTagList(List<String> list) {
+		NBTTagList ret = new NBTTagList();
+		
+		for (String item : list)
+			ret.appendTag(new NBTTagString(item));
+		return ret;
+	}
+	
+	private List<String> toList(NBTTagList list) {
+		List<String> ret = new ArrayList<String>();
+		for (int i = 0; i < list.tagCount(); i++)
+			ret.add(list.getStringTagAt(i));
+		
+		return ret;
+	}
 }

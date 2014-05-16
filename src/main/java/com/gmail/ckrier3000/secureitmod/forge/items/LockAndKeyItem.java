@@ -87,7 +87,7 @@ public class LockAndKeyItem extends Item {
 				NBTTagCompound lockTag = new NBTTagCompound();
 				
 				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-					MessageUtil.sendMessage(player, "Already locked...");
+					MessageUtil.sendMessage(player, "Already locked.");
 				}
 				
 				
