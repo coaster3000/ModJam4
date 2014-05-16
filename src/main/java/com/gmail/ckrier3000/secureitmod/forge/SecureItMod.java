@@ -16,6 +16,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.world.WorldEvent;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
@@ -128,5 +129,21 @@ public class SecureItMod {
 
 	public Logger getLogger() {
 		return log;
+	}
+
+	public String getNewLockID(World world) {
+		List<String> ids = getUsedIDList(world);
+		String id = null;
+		for (int i = 0; i < SecureItMod.maxGenRetries; i++) {
+			String t = RandomStringUtils.randomAlphabetic(32);
+			if (!ids.contains(t)) {
+				id = t;
+				break;
+			}
+		}
+		
+		if (id == null) 
+			getLogger().error("Failed to generate a id for lock.");
+		return id;
 	}
 }

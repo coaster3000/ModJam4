@@ -81,7 +81,9 @@ public class LockAndKeyItem extends Item {
 			if (te instanceof TileEntityChest && !(te instanceof ProtectedTileEntityChest)) {
 				TileEntityChest teChest = (TileEntityChest) te;
 				try {
-					world.setTileEntity(x, y, z, new ProtectedTileEntityChest(teChest));
+					ProtectedTileEntityChest en = new ProtectedTileEntityChest(teChest);
+					world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, en);
+					en.setAll(player.getUniqueID());
 					instance().getLogger().info("Locked!");
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -96,20 +98,7 @@ public class LockAndKeyItem extends Item {
 //					return true;
 //				}
 //				
-//				List<String> ids = instance().getUsedIDList(world);
-//				String id = null;
-//				for (int i = 0; i < SecureItMod.maxGenRetries; i++) {
-//					String t = RandomStringUtils.randomAlphabetic(32);
-//					if (!ids.contains(t)) {
-//						id = t;
-//						break;
-//					}
-//				}
 //				
-//				if (id == null) {
-//					instance().getLogger().error("Failed to generate a id for lock.");
-//					return true;
-//				}
 //
 //				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
 //				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());

@@ -22,12 +22,26 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 	
 	public ProtectedTileEntityChest(TileEntityChest chest) {
 		super();
+		this.worldObj = chest.getWorldObj();
 		blockType = chest.blockType;
 		blockMetadata = chest.getBlockMetadata();
 		lidAngle = chest.lidAngle;
 		prevLidAngle = chest.prevLidAngle;
 		for (int i = 0; i < chest.getSizeInventory(); i++)
 			setInventorySlotContents(i, chest.getStackInSlot(i));
+	}
+	
+	public void setLock(String lock) {
+		this.lockID = lock;
+	}
+	
+	public void setOwner(UUID id) {
+		this.owner = id;
+	}
+	
+	public void setAll(String lock, UUID id) {
+		setLock(lock);
+		setOwner(id);
 	}
 
 	@Override
@@ -56,5 +70,9 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 		
 		arg0.setTag(COMPOUND_TAG_ID_CHEST_LOCK, tag);
 		super.writeToNBT(arg0);
+	}
+
+	public void setAll(UUID uniqueID) {
+		setAll(SecureItMod.instance.getNewLockID(worldObj), uniqueID);
 	}
 }
