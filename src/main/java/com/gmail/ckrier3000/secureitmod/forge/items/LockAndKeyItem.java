@@ -1,21 +1,11 @@
 package com.gmail.ckrier3000.secureitmod.forge.items;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
-import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
-import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
-
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
-import net.minecraft.client.gui.ChatLine;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,15 +14,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldInfo;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.Chat;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
+import org.apache.commons.lang3.RandomStringUtils;
+
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 public class LockAndKeyItem extends Item {
 	static final String WORLDINFO_TAG_USED_IDS = "SIUsedIds";
@@ -102,9 +90,9 @@ public class LockAndKeyItem extends Item {
 				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
 				
 				teChest.writeToNBT(lockInfo);
-				
+								
 				NBTTagCompound lockTag = null;
-				if (lockInfo.hasKey(COMPOUND_TAG_ID_CHEST_LOCK, NBT.TAG_COMPOUND)) {
+				if (lockInfo.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
 					MessageUtil.message(player, "Lock already exists");
 					return true;
 				}
@@ -114,36 +102,36 @@ public class LockAndKeyItem extends Item {
 					worldLockInfo = worldTags.getTagList(WORLDINFO_TAG_USED_IDS, NBT.TAG_STRING);
 				else
 					worldLockInfo = new NBTTagList();
-//				if (worldTags.hasKey(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_LIST))
-//					list = worldTags.getTagList(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_STRING);
-//				else
-//					list = new NBTTagList();
-//				
-//				worldTags.setTag(LockAndKeyItem.LOCKS_TAG_ID, list);
-//				
-//				int m = list.tagCount();
-//				int retries = 50;
-//				String key = null;
-//				
-//				while (retries > 0) {
-//					retries++;
-//					String n = RandomStringUtils.randomAlphanumeric(32);
-//					
-//					for (int i = 0; i < m; i++) {
-//						if (list.getStringTagAt(i).equals(n)) 
-//							continue;
-//					}
-//					
-//					key = n;
-//					break;
-//				}
-//				
-//				//TODO: Add conditions for if a id already exists. Next thing to do for tomorrow.
-//				
-//				list.appendTag(new NBTTagString(key));
-//				lockInfo.setString(LockAndKeyItem.LOCKS_TAG_ID, key);
-//				
-//				teChest.writeToNBT(lockInfo);
+				
+				int retries = 50;
+				List<String> t = new ArrayList<String>();
+				
+				for (int i = 0; i > worldLockInfo.tagCount(); i++)
+					t.add(worldLockInfo.getStringTagAt(i));
+				
+				String lockId = null;
+				while (retries > 0) {
+					retries++;
+					String n = RandomStringUtils.randomAlphanumeric(32);
+					if (t.contains(n)) 
+						continue;
+					lockId = n;
+					break;
+				}
+				
+				if (lockId == null) {
+					MessageUtil.message(player, "Failed to lock.");
+					return true;
+				}
+				
+				worldLockInfo.appendTag(new NBTTagString(lockId));
+				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
+				
+				lockInfo.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, lockId);
+				lockInfo.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
+				teChest.readFromNBT(lockInfo);
+				
+				MessageUtil.message(player, "Locked");
 			}
 			return true; // Prevent's use from what I tested.
 		}
