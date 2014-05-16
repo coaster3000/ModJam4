@@ -27,7 +27,8 @@ public class SecureItMod {
 	
 	private File modConfigurationDirectory, suggestedConfig;
 	private Logger log;
-
+	
+	
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {

@@ -77,7 +77,6 @@ public class LockAndKeyItem extends Item {
 			BlockChest chest = (BlockChest) world.getBlock(x, y, z);
 			TileEntity te = world.getTileEntity(x, y, z);
 			
-			
 			if (te instanceof TileEntityChest) {
 				TileEntityChest teChest = (TileEntityChest) te;
 				
@@ -87,16 +86,12 @@ public class LockAndKeyItem extends Item {
 				NBTTagList worldLockInfo = null;
 				
 				
-				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
-				
 				teChest.writeToNBT(lockInfo);
 								
-				NBTTagCompound lockTag = null;
 				if (lockInfo.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
 					MessageUtil.message(player, "Lock already exists");
 					return true;
 				}
-				
 				
 				if (worldTags.hasKey(WORLDINFO_TAG_USED_IDS, NBT.TAG_LIST))
 					worldLockInfo = worldTags.getTagList(WORLDINFO_TAG_USED_IDS, NBT.TAG_STRING);
@@ -113,6 +108,7 @@ public class LockAndKeyItem extends Item {
 				while (retries > 0) {
 					retries++;
 					String n = RandomStringUtils.randomAlphanumeric(32);
+					System.out.println(n);
 					if (t.contains(n)) 
 						continue;
 					lockId = n;
@@ -127,10 +123,20 @@ public class LockAndKeyItem extends Item {
 				worldLockInfo.appendTag(new NBTTagString(lockId));
 				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
 				
-				lockInfo.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, lockId);
-				lockInfo.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
+				NBTTagCompound lockTag = new NBTTagCompound();
+				
+				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, lockId);
+				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
+				
+				lockInfo.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
+				
 				teChest.readFromNBT(lockInfo);
 				
+				teChest.writeToNBT(lockInfo);
+				if (!lockInfo.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
+					MessageUtil.message(player, "Failed to write lock.");
+					return true;
+				}
 				MessageUtil.message(player, "Locked");
 			}
 			return true; // Prevent's use from what I tested.
