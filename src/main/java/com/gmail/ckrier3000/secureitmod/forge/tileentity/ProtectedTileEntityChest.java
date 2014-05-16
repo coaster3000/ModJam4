@@ -7,6 +7,7 @@ import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.util.Constants.NBT;
 
@@ -51,7 +52,10 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 	
 	@Override
 	public Packet getDescriptionPacket() {
-		return super.getDescriptionPacket();
+		NBTTagCompound tag = new NBTTagCompound();
+		writeToNBT(tag);
+		
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
 	}
 	
 	@Override

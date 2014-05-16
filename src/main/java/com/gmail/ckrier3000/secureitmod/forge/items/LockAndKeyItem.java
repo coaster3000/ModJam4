@@ -21,6 +21,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.forge.tileentity.ProtectedTileEntityChest;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 public class LockAndKeyItem extends Item {
@@ -77,57 +78,56 @@ public class LockAndKeyItem extends Item {
 			BlockChest chest = (BlockChest) world.getBlock(x, y, z);
 			TileEntity te = world.getTileEntity(x, y, z);
 			
-			if (te instanceof TileEntityChest) {
+			if (te instanceof TileEntityChest && !(te instanceof ProtectedTileEntityChest)) {
 				TileEntityChest teChest = (TileEntityChest) te;
 				
-				
-				NBTTagCompound chestTag = new NBTTagCompound();
-				teChest.writeToNBT(chestTag);
-				
-				NBTTagCompound lockTag = new NBTTagCompound();
-				
-				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-					MessageUtil.sendMessage(player, "Already locked.");
-					return true;
-				}
-				
-				List<String> ids = instance().getUsedIDList(world);
-				String id = null;
-				for (int i = 0; i < SecureItMod.maxGenRetries; i++) {
-					String t = RandomStringUtils.randomAlphabetic(32);
-					if (!ids.contains(t)) {
-						id = t;
-						break;
-					}
-				}
-				
-				if (id == null) {
-					instance().getLogger().error("Failed to generate a id for lock.");
-					return true;
-				}
-
-				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
-				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
-				
-				chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
-				
-				te = world.getTileEntity(x, y, z);
-				if (te instanceof TileEntityChest)
-					teChest = (TileEntityChest) te;
-				else
-					instance().getLogger().error("Lost chest tile entity!");
-				
-				teChest.readFromNBT(chestTag);
-				chestTag = new NBTTagCompound();
-				teChest.writeToNBT(chestTag);
-				
-				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-					if (true) //TODO: Replace with a debug config option.
-						instance().getLogger().info("Lock made successfully");
-				} else if (true) //TODO: Replace with a debug config option.
-					instance().getLogger().warn("Lock made failed.");
-				
-				return true;
+//				NBTTagCompound chestTag = new NBTTagCompound();
+//				teChest.writeToNBT(chestTag);
+//				
+//				NBTTagCompound lockTag = new NBTTagCompound();
+//				
+//				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
+//					MessageUtil.sendMessage(player, "Already locked.");
+//					return true;
+//				}
+//				
+//				List<String> ids = instance().getUsedIDList(world);
+//				String id = null;
+//				for (int i = 0; i < SecureItMod.maxGenRetries; i++) {
+//					String t = RandomStringUtils.randomAlphabetic(32);
+//					if (!ids.contains(t)) {
+//						id = t;
+//						break;
+//					}
+//				}
+//				
+//				if (id == null) {
+//					instance().getLogger().error("Failed to generate a id for lock.");
+//					return true;
+//				}
+//
+//				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
+//				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
+//				
+//				chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
+//				
+//				te = world.getTileEntity(x, y, z);
+//				if (te instanceof TileEntityChest)
+//					teChest = (TileEntityChest) te;
+//				else
+//					instance().getLogger().error("Lost chest tile entity!");
+//				
+//				teChest.readFromNBT(chestTag);
+//				chestTag = new NBTTagCompound();
+//				teChest.writeToNBT(chestTag);
+//				
+//				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
+//					if (true) //TODO: Replace with a debug config option.
+//						instance().getLogger().info("Lock made successfully");
+//				} else if (true) //TODO: Replace with a debug config option.
+//					instance().getLogger().warn("Lock made failed.");
+//				
+//				return true;
 						
 			}
 			return true; // Prevent's use from what I tested.
