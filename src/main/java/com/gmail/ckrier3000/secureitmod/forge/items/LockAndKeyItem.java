@@ -90,6 +90,37 @@ public class LockAndKeyItem extends Item {
 					MessageUtil.sendMessage(player, "Already locked.");
 				}
 				
+				List<String> ids = instance().getUsedIDList(world);
+				String id = null;
+				for (int i = 0; i < SecureItMod.maxGenRetries; i++) {
+					String t = RandomStringUtils.randomAlphabetic(32);
+					if (!ids.contains(t)) {
+						id = t;
+						break;
+					}
+				}
+				
+				if (id == null) {
+					instance().getLogger().error("Failed to generate a id for lock.");
+					return true;
+				}
+
+				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
+				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
+				
+				chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
+				
+				teChest.readFromNBT(chestTag);
+				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK, NBT.TAG_COMPOUND)) {
+					if (true) //TODO: Replace with a debug config option.
+						instance().getLogger().info("Lock made successfully");
+				} else
+					instance().getLogger().warn("Lock made failed.");
+				
+				return true;
+						
+				
+				
 				
 //				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
 //				
@@ -150,6 +181,11 @@ public class LockAndKeyItem extends Item {
 			return true; // Prevent's use from what I tested.
 		}
 		return false;
+	}
+	
+	//Purely a helper function for less typing for now. Maybe will keep it.
+	private SecureItMod instance() {
+		return SecureItMod.instance;
 	}
 
 }

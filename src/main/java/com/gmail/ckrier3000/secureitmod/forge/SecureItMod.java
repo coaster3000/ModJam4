@@ -38,6 +38,7 @@ public class SecureItMod {
 	public static SecureItMod instance;
 
 	public static Item lockAndKeyItem, keyItem;
+	public static int maxGenRetries = 50;
 	
 	private File modConfigurationDirectory, suggestedConfig;
 	private Logger log;
@@ -114,5 +115,9 @@ public class SecureItMod {
 			ret.add(list.getStringTagAt(i));
 		
 		return ret;
+	}
+
+	public Logger getLogger() {
+		return log;
 	}
 }
