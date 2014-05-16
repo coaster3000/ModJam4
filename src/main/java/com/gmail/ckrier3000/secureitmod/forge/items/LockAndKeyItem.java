@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
@@ -71,8 +72,18 @@ public class LockAndKeyItem extends Item {
 			float hitZ) {
 
 		if (world.getBlock(x, y, z) instanceof BlockChest) {
-			BlockChest chest = (BlockChest) world.get(x, y, z);
+			BlockChest chest = (BlockChest) world.getBlock(x, y, z);
 			TileEntity te = world.getTileEntity(x, y, z);
+			
+			
+			if (te instanceof TileEntityChest) {
+				TileEntityChest teChest = (TileEntityChest) te;
+				NBTTagCompound lockInfo = new NBTTagCompound();
+				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
+				
+				
+				teChest.writeToNBT(lockInfo);
+			}
 			return true; // Prevent's use from what I tested.
 		}
 		return false;
