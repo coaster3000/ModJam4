@@ -1,5 +1,9 @@
 package com.gmail.ckrier3000.secureitmod.forge.items;
 
+import java.util.Random;
+
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -15,6 +19,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.ChatComponentText;
@@ -23,9 +29,12 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Chat;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class LockAndKeyItem extends Item {
+	static final String LOCKS_TAG_ID = "SecureItModLocks";
+
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
@@ -81,6 +90,29 @@ public class LockAndKeyItem extends Item {
 				NBTTagCompound lockInfo = new NBTTagCompound();
 				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
 				
+				NBTTagList list = null;
+				if (worldTags.hasKey(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_LIST))
+					list = worldTags.getTagList(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_STRING);
+				else
+					list = new NBTTagList();
+				
+				worldTags.setTag(LockAndKeyItem.LOCKS_TAG_ID, list);
+				
+				int m = list.tagCount();
+				int retries = 50;
+				String key = null;
+				while (retries > 0) {
+					retries++;
+					String n = RandomStringUtils.randomAlphanumeric(32);
+					
+					for (int i = 0; i < m; i++) {
+						if (list.getStringTagAt(i).equals(n)) 
+							continue;
+					}
+					key = n;
+					break;
+				}
+				list.appendTag(new NBTTagString(key));
 				
 				teChest.writeToNBT(lockInfo);
 			}
