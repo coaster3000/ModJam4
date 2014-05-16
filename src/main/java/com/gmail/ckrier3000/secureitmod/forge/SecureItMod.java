@@ -1,18 +1,17 @@
 package com.gmail.ckrier3000.secureitmod.forge;
 
-import javax.annotation.PreDestroy;
+import java.io.File;
 
-import net.minecraft.client.renderer.texture.TextureUtil;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.MinecraftForge;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.*;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -25,9 +24,18 @@ public class SecureItMod {
 	public static SecureItMod instance;
 
 	public static Item lockAndKeyItem, keyItem;
+	
+	private File modConfigurationDirectory, suggestedConfig;
+	private Logger log;
+
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		modConfigurationDirectory = event.getModConfigurationDirectory();
+		log = event.getModLog();
+		suggestedConfig = event.getSuggestedConfigurationFile();
+		
+		
 		lockAndKeyItem = new LockAndKeyItem()
 				.setTextureName("secureitmod:lockAndKey");
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
@@ -39,10 +47,10 @@ public class SecureItMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 	}
+	
 }

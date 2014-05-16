@@ -92,16 +92,19 @@ public class LockAndKeyItem extends Item {
 			if (te instanceof TileEntityChest) {
 				TileEntityChest teChest = (TileEntityChest) te;
 				
-
 				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
 				
 				NBTTagCompound lockInfo = null;
 				NBTTagList worldLockInfo = null;
 				
+				
+				
 				if (worldTags.hasKey(WORLDINFO_TAG_USED_IDS, NBT.TAG_LIST))
 					worldLockInfo = worldTags.getTagList(WORLDINFO_TAG_USED_IDS, NBT.TAG_STRING);
 				else
 					worldLockInfo = new NBTTagList();
+				
+				
 				
 				worldTags.setTag(WORLDINFO_TAG_USED_IDS, worldLockInfo);
 //				NBTTagCompound lockInfo = new NBTTagCompound();
