@@ -80,7 +80,12 @@ public class LockAndKeyItem extends Item {
 			
 			if (te instanceof TileEntityChest && !(te instanceof ProtectedTileEntityChest)) {
 				TileEntityChest teChest = (TileEntityChest) te;
-				
+				try {
+					world.setTileEntity(x, y, z, new ProtectedTileEntityChest(teChest));
+					instance().getLogger().info("Locked!");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 //				NBTTagCompound chestTag = new NBTTagCompound();
 //				teChest.writeToNBT(chestTag);
 //				
@@ -129,6 +134,8 @@ public class LockAndKeyItem extends Item {
 //				
 //				return true;
 						
+			} else {
+				MessageUtil.sendMessage(player, "Already locked");
 			}
 			return true; // Prevent's use from what I tested.
 		}

@@ -15,28 +15,17 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 	
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
-	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockId";
-	
+	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	
 	private String lockID;
 	private UUID owner;
 	
-	
 	public ProtectedTileEntityChest(TileEntityChest chest) {
-		worldObj = chest.getWorldObj();
+		super();
 		blockType = chest.blockType;
 		blockMetadata = chest.getBlockMetadata();
 		lidAngle = chest.lidAngle;
 		prevLidAngle = chest.prevLidAngle;
-		adjacentChestChecked = chest.adjacentChestChecked;
-		adjacentChestXNeg = chest.adjacentChestXNeg;
-		adjacentChestXPos = chest.adjacentChestXPos;
-		adjacentChestZNeg = chest.adjacentChestZNeg;
-		adjacentChestZPos = chest.adjacentChestZPos;
-		tileEntityInvalid = chest.isInvalid();
-		xCoord = chest.xCoord;
-		yCoord = chest.yCoord;
-		zCoord = chest.zCoord;
 		for (int i = 0; i < chest.getSizeInventory(); i++)
 			setInventorySlotContents(i, chest.getStackInSlot(i));
 	}
@@ -47,6 +36,7 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 			lockID = arg0.getCompoundTag(COMPOUND_TAG_ID_CHEST_LOCK).getString(COMPOUND_TAG_ID_CHEST_LOCK_ID);
 			owner = UUID.fromString(arg0.getCompoundTag(COMPOUND_TAG_ID_CHEST_LOCK).getString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER));
 		}
+		
 		super.readFromNBT(arg0);
 	}
 	
