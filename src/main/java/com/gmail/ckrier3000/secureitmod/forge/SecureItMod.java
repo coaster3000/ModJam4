@@ -47,6 +47,8 @@ public class SecureItMod {
 	
 	private Map<Integer, NBTTagList> usedLockLists;
 	
+	public static boolean isServer;
+	
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		World w = event.world;
@@ -69,6 +71,7 @@ public class SecureItMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		isServer = event.getSide().isServer();
 		modConfigurationDirectory = event.getModConfigurationDirectory();
 		log = event.getModLog();
 		suggestedConfig = event.getSuggestedConfigurationFile();
