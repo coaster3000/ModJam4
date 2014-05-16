@@ -101,6 +101,7 @@ public class LockAndKeyItem extends Item {
 				int m = list.tagCount();
 				int retries = 50;
 				String key = null;
+				
 				while (retries > 0) {
 					retries++;
 					String n = RandomStringUtils.randomAlphanumeric(32);
@@ -109,10 +110,15 @@ public class LockAndKeyItem extends Item {
 						if (list.getStringTagAt(i).equals(n)) 
 							continue;
 					}
+					
 					key = n;
 					break;
 				}
+				
+				//TODO: Add conditions for if a id already exists. Next thing to do for tomorrow.
+				
 				list.appendTag(new NBTTagString(key));
+				lockInfo.setString(LockAndKeyItem.LOCKS_TAG_ID, key);
 				
 				teChest.writeToNBT(lockInfo);
 			}
