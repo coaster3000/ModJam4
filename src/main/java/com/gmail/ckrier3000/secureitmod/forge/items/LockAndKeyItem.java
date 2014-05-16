@@ -111,9 +111,15 @@ public class LockAndKeyItem extends Item {
 				
 				chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
 				
-				teChest.readFromNBT(chestTag);
-				teChest.writeToNBT(chestTag);
+				te = world.getTileEntity(x, y, z);
+				if (te instanceof TileEntityChest)
+					teChest = (TileEntityChest) te;
+				else
+					instance().getLogger().error("Lost chest tile entity!");
 				
+				teChest.readFromNBT(chestTag);
+				chestTag = new NBTTagCompound();
+				teChest.writeToNBT(chestTag);
 				
 				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
 					if (true) //TODO: Replace with a debug config option.
