@@ -27,13 +27,17 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.Chat;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class LockAndKeyItem extends Item {
-	static final String LOCKS_TAG_ID = "SecureItModLocks";
+	static final String WORLDINFO_TAG_USED_IDS = "SIUsedIds";
+	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
+	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
+	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "owner";
 
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
@@ -87,40 +91,54 @@ public class LockAndKeyItem extends Item {
 			
 			if (te instanceof TileEntityChest) {
 				TileEntityChest teChest = (TileEntityChest) te;
-				NBTTagCompound lockInfo = new NBTTagCompound();
+
 				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
 				
-				NBTTagList list = null;
-				if (worldTags.hasKey(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_LIST))
-					list = worldTags.getTagList(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_STRING);
-				else
-					list = new NBTTagList();
+				NBTTagCompound lockInfo = null;
+				NBTTagList worldLockInfo = null;
 				
-				worldTags.setTag(LockAndKeyItem.LOCKS_TAG_ID, list);
-				
-				int m = list.tagCount();
-				int retries = 50;
-				String key = null;
-				
-				while (retries > 0) {
-					retries++;
-					String n = RandomStringUtils.randomAlphanumeric(32);
+				if (worldTags.hasKey(WORLDINFO_TAG_USED_IDS, NBT.TAG_LIST))
+					worldLockInfo = worldTags.getTagList(WORLDINFO_TAG_USED_IDS, NBT.TAG_STRING);
+				else {
+					worldLockInfo = new NBTTagList();
 					
-					for (int i = 0; i < m; i++) {
-						if (list.getStringTagAt(i).equals(n)) 
-							continue;
-					}
-					
-					key = n;
-					break;
 				}
 				
-				//TODO: Add conditions for if a id already exists. Next thing to do for tomorrow.
 				
-				list.appendTag(new NBTTagString(key));
-				lockInfo.setString(LockAndKeyItem.LOCKS_TAG_ID, key);
-				
-				teChest.writeToNBT(lockInfo);
+//				NBTTagCompound lockInfo = new NBTTagCompound();
+//				NBTTagCompound worldTags = world.getWorldInfo().getNBTTagCompound();
+//				
+//				NBTTagList list = null;
+//				if (worldTags.hasKey(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_LIST))
+//					list = worldTags.getTagList(LockAndKeyItem.LOCKS_TAG_ID, NBT.TAG_STRING);
+//				else
+//					list = new NBTTagList();
+//				
+//				worldTags.setTag(LockAndKeyItem.LOCKS_TAG_ID, list);
+//				
+//				int m = list.tagCount();
+//				int retries = 50;
+//				String key = null;
+//				
+//				while (retries > 0) {
+//					retries++;
+//					String n = RandomStringUtils.randomAlphanumeric(32);
+//					
+//					for (int i = 0; i < m; i++) {
+//						if (list.getStringTagAt(i).equals(n)) 
+//							continue;
+//					}
+//					
+//					key = n;
+//					break;
+//				}
+//				
+//				//TODO: Add conditions for if a id already exists. Next thing to do for tomorrow.
+//				
+//				list.appendTag(new NBTTagString(key));
+//				lockInfo.setString(LockAndKeyItem.LOCKS_TAG_ID, key);
+//				
+//				teChest.writeToNBT(lockInfo);
 			}
 			return true; // Prevent's use from what I tested.
 		}
