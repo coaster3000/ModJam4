@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
@@ -59,7 +60,7 @@ public class LockAndKeyItem extends Item {
 			ItemStack stack, // Non interactive blocks.
 			EntityPlayer player, World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ) {
-
+			
 		return false;
 	}
 
@@ -71,8 +72,7 @@ public class LockAndKeyItem extends Item {
 
 		if (world.getBlock(x, y, z) instanceof BlockChest) {
 			BlockChest chest = (BlockChest) world.get(x, y, z);
-			Game
-			world.getTileEntity(x, y, z).writeToNBT();
+			TileEntity te = world.getTileEntity(x, y, z);
 			return true; // Prevent's use from what I tested.
 		}
 		return false;
