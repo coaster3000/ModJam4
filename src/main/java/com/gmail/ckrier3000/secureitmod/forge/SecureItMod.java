@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -24,17 +25,18 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = " cSecureItMod", version = "1.7.2-1.0", name = "Secure It Mod")
+@Mod(modid = "cSecureItMod", version = "1.7.2-1.0", name = "Secure It Mod")
 public class SecureItMod {
 
 	public static final String WORLDINFO_TAG_USED_IDS = "SIUsedIds";
 	
-	@Instance("cSecureItMod")
+	@Instance(value = "cSecureItMod")
 	public static SecureItMod instance;
 
 	public static Item lockAndKeyItem, keyItem;
@@ -70,12 +72,12 @@ public class SecureItMod {
 		modConfigurationDirectory = event.getModConfigurationDirectory();
 		log = event.getModLog();
 		suggestedConfig = event.getSuggestedConfigurationFile();
-		
+		usedLockLists  = new HashMap<Integer, NBTTagList>();
 		
 		lockAndKeyItem = new LockAndKeyItem()
 				.setTextureName("secureitmod:lockAndKey");
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
-
+		
 		GameRegistry.registerItem(lockAndKeyItem,
 				lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
@@ -83,11 +85,15 @@ public class SecureItMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		usedLockLists  = new HashMap<Integer, NBTTagList>();
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+	}
+	
+	@EventHandler
+	public void complete(FMLLoadCompleteEvent event) {
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	public List<String> getUsedIDList(World world) {
