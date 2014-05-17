@@ -3,6 +3,7 @@ package com.gmail.ckrier3000.secureitmod.forge.items;
 import java.util.List;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -19,6 +20,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 public class KeyItem extends Item {
+	public static final String COMPOUND_TAG_KEY_CREATOR = "maker";
+	public static final String COMPOUND_TAG_KEY_ID = "keyID";
+	
 	public KeyItem() {
 		setUnlocalizedName("key");
 		setMaxStackSize(1);
@@ -28,6 +32,36 @@ public class KeyItem extends Item {
 	@Override
 	public boolean canItemEditBlocks() {
 		return false;
+	}
+	
+	public String getKey(ItemStack stack) {
+		if (!stack.getItem().equals(this))
+			return null;
+		
+		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
+			return stack.stackTagCompound.getString(COMPOUND_TAG_KEY_ID);
+		return null;
+	}
+	
+	@Override
+	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z,
+			EntityPlayer player) {
+		
+		if (SecureItMod.instance.isLocked(player.worldObj, y, z, z))
+			if (SecureItMod.instance.isKey(player.worldObj, x, y, z, getKey(stack))) {
+				SecureItMod.instance.unlock(player.worldObj, x, y, z);
+				if (stack.stackSize == 1) //Should never have more than one key of same id anyways.
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1));
+				else {
+					stack.stackSize--;
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack);
+					if (!player.inventory.addItemStackToInventory(new ItemStack(SecureItMod.lockAndKeyItem,1)))
+						player.dropItem(SecureItMod.lockAndKeyItem, 1);
+				}
+				MessageUtil.sendMessage(player, "Unlocked chest.");
+			}
+		
+		return true;
 	}
 	
 	@Override
