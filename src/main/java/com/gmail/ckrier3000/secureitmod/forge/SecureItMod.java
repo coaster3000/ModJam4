@@ -26,10 +26,12 @@ import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
+import com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -49,6 +51,9 @@ public class SecureItMod {
 	public static Item lockAndKeyItem, keyItem;
 
 	public static int maxGenRetries = 50;
+	
+	@SidedProxy(serverSide = "com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy", clientSide = "com.gmail.ckrier3000.secureitmod.forge.common.ClientProxy")
+	public static CommonProxy proxy;
 
 	public static final String WORLDINFO_LOCKS = "SILocks";
 	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
