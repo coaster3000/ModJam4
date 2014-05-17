@@ -69,9 +69,6 @@ public class LockAndKeyItem extends Item {
 
 		return true;
 	}
-	
-	
-	
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack,
