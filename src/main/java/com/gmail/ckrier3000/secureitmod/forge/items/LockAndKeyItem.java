@@ -28,7 +28,9 @@ public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
-
+	
+	boolean isActive = false;
+	
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
@@ -66,7 +68,9 @@ public class LockAndKeyItem extends Item {
 			ItemStack stack, // Non interactive blocks.
 			EntityPlayer player, World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ) {
-
+		
+		
+		
 		return true;
 	}
 
@@ -101,7 +105,7 @@ public class LockAndKeyItem extends Item {
 				return true; // Prevent's use from what I tested.
 			}
 		System.out.println(world.isRemote + " fallback");
-		return SecureItMod.instance.isLocked(world, x, y, z);
+		return false;//SecureItMod.instance.isLocked(world, x, y, z);
 	}
 
 	@Override
