@@ -98,9 +98,9 @@ public class LockAndKeyItem extends Item {
 				player.inventory.markDirty();
 				return true; // Prevent's use from what I tested.
 			}
-		return false;
+		return SecureItMod.instance.isLocked(world, x, y, z);
 	}
-	
+
 	@Override
 	public boolean onBlockStartBreak(ItemStack itemstack, int X, int Y, int Z, EntityPlayer player) {
 		return true;
