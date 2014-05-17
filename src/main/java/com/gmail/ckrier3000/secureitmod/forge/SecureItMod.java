@@ -48,17 +48,15 @@ public class SecureItMod {
 	public static Item lockAndKeyItem, keyItem;
 
 	public static int maxGenRetries = 50;
-	
-	
+
 	public static final String WORLDINFO_LOCKS = "SILocks";
 	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
-	
+
 	private Map<Integer, NBTTagList> usedLockLists;
 	private Map<Integer, NBTTagCompound> lockDataLists;
 
 	private Logger log;
 	private File modConfigurationDirectory, suggestedConfig;
-
 
 	public Logger getLogger() {
 		return log;
@@ -98,7 +96,7 @@ public class SecureItMod {
 	public List<String> getUsedIDList(World world) {
 		return getUsedIDList(world.provider.dimensionId);
 	}
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 
@@ -125,7 +123,7 @@ public class SecureItMod {
 
 		TileEntity te = world.getTileEntity(x, y, z);
 	}
-	
+
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
@@ -142,7 +140,8 @@ public class SecureItMod {
 					.getTagList(WORLDINFO_USEDLOCKS, NBT.TAG_STRING));
 		if (w.getWorldInfo().getNBTTagCompound()
 				.hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
-			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound().getCompoundTag(WORLDINFO_LOCKS));
+			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound()
+					.getCompoundTag(WORLDINFO_LOCKS));
 	}
 
 	@SubscribeEvent
@@ -188,13 +187,27 @@ public class SecureItMod {
 
 		return ret;
 	}
-	
+
 	private List<String> toStringList(NBTTagList list) {
 		List<String> ret = new ArrayList<String>();
 		for (int i = 0; i < list.tagCount(); i++)
 			ret.add(list.getStringTagAt(i));
 
 		return ret;
+	}
+
+	private NBTTagCompound getLocks(World world) {
+		return getLocks(world.provider.dimensionId);
+	}
+
+	private NBTTagCompound getLocks(int dim) {
+		if (lockDataLists.containsKey(dim))
+			return lockDataLists.get(dim);
+		else {
+			NBTTagCompound t = new NBTTagCompound();
+			lockDataLists.put(dim, t);
+			return t;
+		}
 	}
 
 	private NBTTagList toTagList(List<String> list) {
@@ -208,23 +221,28 @@ public class SecureItMod {
 	public String lock(World world, int x, int y, int z, UUID owner) {
 		return lock(world, x, y, z, owner.toString());
 	}
-	
+
 	public String lock(World world, int x, int y, int z, String owner) {
 		String key = getNewLockID(world);
 		if (key == null)
 			return null;
-		
-		String id = new StringBuilder().append(x).append(',').append(y).append(',').append(z).toString();
-		
+
+		String id = getLocString(x, y, z);
+
 		return key;
+	}
+	
+	private String getLocString(int x, int y, int z) {
+		return new StringBuilder().append(x).append(',').append(y)
+		.append(',').append(z).toString();
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
+		String id = getLocString(x, y, z);
 		
-		
-		return false;
+		return getLocks(world).hasKey(id, NBT.TAG_COMPOUND);
 	}
-	
+
 	public void unlock(World world, int x, int y, int z) {
 		// TODO Auto-generated method stub
 	}
