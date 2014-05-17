@@ -170,8 +170,9 @@ public class SecureItMod {
 		EntityPlayer player = event.entityPlayer;
 		
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof ProtectedTileEntityChest)
+		if (te instanceof ProtectedTileEntityChest) //GOOD
 		{
+			System.out.println(te.getClass().getName());
 			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
 			if (!cte.isUseableByPlayer(player)) {
 				MessageUtil.sendMessage(player, "Chest is locked. Must use a key!");
@@ -195,8 +196,8 @@ public class SecureItMod {
 			if (te instanceof TileEntityChest)
 			{
 				MessageUtil.sendMessage(event.getPlayer(), "RanC");
-				
-				if (((TileEntityChest)te) instanceof ProtectedTileEntityChest)
+				System.out.println(te.getClass().getName());
+				if (((TileEntityChest)te) instanceof ProtectedTileEntityChest) //What the....
 				{
 					MessageUtil.sendMessage(event.getPlayer(), "RanCA");
 					ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
