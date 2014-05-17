@@ -167,16 +167,21 @@ public class SecureItMod {
 		TileEntity te = world.getTileEntity(x, y, z);
 		if (te instanceof ProtectedTileEntityChest)
 		{
-			Item i = player.getCurrentEquippedItem().getItem();
-			if (!i.equals(keyItem)) {
-				event.useBlock = Result.DENY;
-				event.useItem = Result.DENY;
+			Item i;
+			if (player.getCurrentEquippedItem() == null)
+				i = null;
+			else
+				i = player.getCurrentEquippedItem().getItem();
+			
+			
+			if (i == null || !i.equals(keyItem)) {
+				event.setCanceled(true);
 				MessageUtil.sendMessage(player, "You need a key for this lock!");
 				return;
 			}
 			
 			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
-			
+			MessageUtil.sendMessage(player, "OK");
 		}
 			
 	}
