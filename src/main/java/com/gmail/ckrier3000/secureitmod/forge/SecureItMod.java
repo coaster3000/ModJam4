@@ -81,11 +81,17 @@ public class SecureItMod {
 	public Integer getLastID(World world) {
 		return getLastID(world.provider.dimensionId);
 	}
+	
+	public Integer getLock(World world, int x, int y, int z) {
+		
+	}
 
 	private NBTTagCompound getLocks(int dim) {
-		if (lockDataLists.containsKey(dim))
+		if (lockDataLists.containsKey(dim)) {
+//			System.out.println("getLocks " + dim);
 			return lockDataLists.get(dim);
-		else {
+		} else {
+//			System.out.println("getLocks else");
 			NBTTagCompound t = new NBTTagCompound();
 			lockDataLists.put(dim, t);
 			return t;
@@ -93,6 +99,8 @@ public class SecureItMod {
 	}
 
 	private NBTTagCompound getLocks(World world) {
+		System.out.println(world.provider.dimensionId + "dim unlock");
+		System.out.println(world.isRemote + "dim unlock remote");
 		return getLocks(world.provider.dimensionId);
 	}
 
@@ -130,6 +138,7 @@ public class SecureItMod {
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
+		System.out.println(world.provider.dimensionId + "");
 		return getLocks(world).hasKey(id);
 	}
 
@@ -163,7 +172,7 @@ public class SecureItMod {
 		final int x = event.x, y = event.y, z = event.z;
 		World world = event.world;
 		Block block = event.block;
-
+//		System.out.println(getLocString(x, y, z));
 		if (block instanceof BlockChest) {
 			BlockChest chest = (BlockChest) block;
 			if (isLocked(world, x, y, z))
@@ -175,23 +184,19 @@ public class SecureItMod {
 	public void onChestAccess(PlayerInteractEvent event) {
 		final int x = event.x, y = event.y, z = event.z;
 		World world = event.entity.worldObj;
-
+//		System.out.println(getLocString(x, y, z));
 		EntityPlayer player = event.entityPlayer;
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(ForceUnlockToolItem.class)) {
+				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass())) {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())) {
-					if (player.getCurrentEquippedItem().stackTagCompound.hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
-						if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getInteger(KeyItem.COMPOUND_TAG_KEY_ID))) {
-							MessageUtil.sendMessage(player, "Here");
-							return;
-						} else {
-							MessageUtil.sendMessage(player, "Wrong key... Your key is " + KeyItem.getKey(player.getCurrentEquippedItem()));
-							event.setCanceled(true);
-						}
+//					System.out.println("---");
+					return;
+				} else {
+					
 				}
 
 			}
@@ -270,7 +275,7 @@ public class SecureItMod {
 	public void unlock(World world, int x, int y, int z) {
 		if (!isLocked(world, x, y, z))
 			return;
-
+		
 		getLocks(world).removeTag(getLocString(x, y, z));
 	}
 }
