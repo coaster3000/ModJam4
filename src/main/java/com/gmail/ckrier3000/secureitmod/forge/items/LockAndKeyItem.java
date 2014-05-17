@@ -93,6 +93,7 @@ public class LockAndKeyItem extends Item {
 						player.entityDropItem(key, 1);
 					
 					stack.stackSize--;
+					player.inventory.setItemStack(stack.copy());
 				}
 				player.inventory.markDirty();
 				return true; // Prevent's use from what I tested.
