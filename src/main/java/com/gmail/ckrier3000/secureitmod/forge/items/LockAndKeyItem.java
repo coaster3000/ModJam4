@@ -45,6 +45,14 @@ public class LockAndKeyItem extends Item {
 	}
 
 	@Override
+	public void getSubItems(Item item, CreativeTabs tab,
+			List rets) {
+		ItemStack i = new ItemStack(item, 1);
+		i.stackTagCompound = new NBTTagCompound();
+		rets.add(i);
+	}
+	
+	@Override
 	public int getHarvestLevel(ItemStack stack, String toolClass) {
 		return 0;
 	}
@@ -75,6 +83,9 @@ public class LockAndKeyItem extends Item {
 
 		return false;
 	}
+	
+	
+	
 
 	@Override
 	public boolean onItemUseFirst(ItemStack stack,
@@ -100,6 +111,8 @@ public class LockAndKeyItem extends Item {
 						int empty = player.inventory.getFirstEmptyStack();
 						if (empty < 0) {
 							player.entityDropItem(key, 1);
+						} else {
+							player.inventory.addItemStackToInventory(key);
 						}
 					} else {
 						MessageUtil.sendMessage(player, "Failed to lock chest!");
