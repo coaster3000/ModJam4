@@ -28,7 +28,7 @@ public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 	private static final String COMPOUND_TAG_KEY_CREATOR = "maker";
-	private static final String COMPOUND_TAG_KEY_ID = "keyID";
+	public static final String COMPOUND_TAG_KEY_ID = "keyID";
 
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);

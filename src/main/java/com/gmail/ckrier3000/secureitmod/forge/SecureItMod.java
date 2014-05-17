@@ -26,6 +26,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -122,7 +123,18 @@ public class SecureItMod {
 		World world = event.entity.worldObj;
 
 		EntityPlayer player = event.entityPlayer;
-
+		Block b = world.getBlock(x, y, z);
+		if (b instanceof BlockChest)
+			if (isLocked(world, x, y, z)) {
+				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().equals(keyItem)) {
+					event.setCanceled(true);
+					MessageUtil.sendMessage(player, "Chest is locked!");
+				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
+					if (event.action.equals(event.action.LEFT_CLICK_BLOCK))
+						unlock(world, x, y, z, player.getCurrentEquippedItem().getTagCompound().getString(LockAndKeyItem.COMPOUND_TAG_KEY_ID));
+				}
+					
+			}
 	}
 
 	@EventHandler
@@ -254,6 +266,10 @@ public class SecureItMod {
 	private String getLocString(int x, int y, int z) {
 		return new StringBuilder().append(x).append(',').append(y).append(',')
 				.append(z).toString();
+	}
+	
+	public boolean isKey(World world, int x, int y, int z, String key) {
+		return true;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
