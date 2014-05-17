@@ -34,6 +34,8 @@ public class KeyItem extends Item {
 		return false;
 	}
 	
+	
+	
 	public Integer getKey(ItemStack stack) {
 		if (!stack.getItem().equals(this))
 			return null;
@@ -41,6 +43,11 @@ public class KeyItem extends Item {
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
 		return null;
+	}
+	
+	@Override
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+		return true;
 	}
 	
 	@Override
@@ -60,6 +67,7 @@ public class KeyItem extends Item {
 				}
 				MessageUtil.sendMessage(player, "Unlocked chest.");
 			}
+		player.inventory.markDirty();
 		
 		return true;
 	}

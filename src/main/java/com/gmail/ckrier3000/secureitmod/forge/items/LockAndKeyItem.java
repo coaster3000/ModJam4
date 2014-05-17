@@ -96,14 +96,16 @@ public class LockAndKeyItem extends Item {
 					} else {
 						if (player.inventory.addItemStackToInventory(key))
 							MessageUtil.sendMessage(player, "Good");
-						else
+						else {
 							player.entityDropItem(key, 1);
 							MessageUtil.sendMessage(player, "Bad");
+						}
 					}
 				} else {
 					MessageUtil.sendMessage(player, "Failed consume key and lock");
 				}
 			}
+			player.inventory.markDirty();
 			return true; // Prevent's use from what I tested.
 		}
 		return false;

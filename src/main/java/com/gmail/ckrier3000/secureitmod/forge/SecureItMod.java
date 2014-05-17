@@ -113,6 +113,8 @@ public class SecureItMod {
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
+				if (player.getCurrentEquippedItem() != null)
+					System.out.println(player.getCurrentEquippedItem().getItem().getClass());
 				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().equals(keyItem)) {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
@@ -255,7 +257,7 @@ public class SecureItMod {
 		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
 		else
-			return false;
+			return true;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
