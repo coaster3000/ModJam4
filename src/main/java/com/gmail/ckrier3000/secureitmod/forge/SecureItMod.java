@@ -156,10 +156,8 @@ public class SecureItMod {
 					.setTag(WORLDINFO_LOCKS, usedLockLists.get(id));
 		if (lockDataLists.containsKey(id)) {
 			w.getWorldInfo().getNBTTagCompound()
-			.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
-			
+					.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
 		}
-
 	}
 
 	@EventHandler
