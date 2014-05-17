@@ -84,33 +84,20 @@ public class LockAndKeyItem extends Item {
 				MessageUtil.sendMessage(player, "Already locked!");
 			else {
 				if (player.inventory.consumeInventoryItem(this)) {
-					String lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
-					if (lock != null) {
-						MessageUtil.sendMessage(player, "Locked Chest!");
-						ItemStack key = new ItemStack(SecureItMod.keyItem);
-						
-						key.stackTagCompound = new NBTTagCompound();
-						
-						key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_ID, lock);
-						key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
-						
-						int empty = player.inventory.getFirstEmptyStack();
-						if (empty < 0) {
-							player.entityDropItem(key, 1);
-						} else {
-							player.inventory.addItemStackToInventory(key);
-						}
+					int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
+					MessageUtil.sendMessage(player, "Locked Chest!");
+					ItemStack key = new ItemStack(SecureItMod.keyItem);
+					
+					key.stackTagCompound = new NBTTagCompound();
+					
+					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
+					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
+					
+					int empty = player.inventory.getFirstEmptyStack();
+					if (empty < 0) {
+						player.entityDropItem(key, 1);
 					} else {
-						MessageUtil.sendMessage(player, "Failed to lock chest!");
-						if (player.inventory.hasItem(this)) {
-							for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-								if (player.inventory.getStackInSlot(i).stackSize < player.inventory.getStackInSlot(i).getMaxStackSize()) {
-									player.inventory.getStackInSlot(i).stackSize++;
-									return false;
-								}
-							}
-							player.dropItem(this, 1);
-						}
+						player.inventory.addItemStackToInventory(key);
 					}
 				} else {
 					MessageUtil.sendMessage(player, "Failed consume key and lock");
