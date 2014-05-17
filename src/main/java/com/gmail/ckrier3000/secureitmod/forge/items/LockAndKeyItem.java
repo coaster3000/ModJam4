@@ -83,6 +83,7 @@ public class LockAndKeyItem extends Item {
 				try {
 					ProtectedTileEntityChest en = new ProtectedTileEntityChest(teChest);
 					world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, en);
+					world.mapStorage.saveAllData();
 					try {
 						en.setAll(player.getUniqueID());
 					} catch (Exception e) {

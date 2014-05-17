@@ -198,7 +198,7 @@ public class SecureItMod {
 			
 				if (((TileEntityChest)te) instanceof ProtectedTileEntityChest)
 				{
-					MessageUtil.sendMessage(event.getPlayer(), "RanC");
+					MessageUtil.sendMessage(event.getPlayer(), "RanCA");
 					ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
 					if (!cte.isUseableByPlayer(event.getPlayer())) {
 						event.setCanceled(true);
