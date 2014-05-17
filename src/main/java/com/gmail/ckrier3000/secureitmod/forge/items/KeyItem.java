@@ -65,6 +65,11 @@ public class KeyItem extends Item {
 	}
 	
 	@Override
+	public String getItemStackDisplayName(ItemStack par1ItemStack) {
+		return super.getItemStackDisplayName(par1ItemStack) + " " + (getKey(par1ItemStack) != null?getKey(par1ItemStack):"");
+	}
+	
+	@Override
 	public void getSubItems(Item item, CreativeTabs tab,
 			List rets) {
 		ItemStack i = new ItemStack(item, 1);

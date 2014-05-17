@@ -54,7 +54,7 @@ public class SecureItMod {
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 
-	private Map<Integer, NBTTagList> usedLockLists;
+	private Map<Integer, Integer> usedLockLists;
 	private Map<Integer, NBTTagCompound> lockDataLists;
 
 	private Logger log;
@@ -64,41 +64,26 @@ public class SecureItMod {
 		return log;
 	}
 
-	public String getNewLockID(World world) {
+	public int getNewLockID(World world) {
 		final int did = world.provider.dimensionId;
 
-		List<String> ids = getUsedIDList(world);
-		String id = null;
-		for (int i = 0; i < SecureItMod.maxGenRetries; i++) {
-			String t = RandomStringUtils.randomAlphabetic(32);
-			if (!ids.contains(t)) {
-				id = t;
-				break;
-			}
-		}
+		if (!usedLockLists.containsKey(did)) {
+			usedLockLists.put(did, 0);
+			return 0;
+		} 
+			
+		int ret = usedLockLists.get(did)+ 1;
+		usedLockLists.put(did, ret);
+		return ret;
 		
-		if (id == null) {
-			getLogger().error("Failed to generate a id for lock.");
-			return id;
-		}
-		
-		ids.add(id);
-
-		if (usedLockLists.containsKey(did))
-			usedLockLists.put(did, toTagList(ids));
-
-		return id;
 	}
 
-	public List<String> getUsedIDList(int demID) {
-		if (usedLockLists.containsKey(demID))
-			return toStringList(usedLockLists.get(demID));
-		else
-			return new ArrayList<String>();
+	public int getLastID(int demID) {
+		return 0;
 	}
 
-	public List<String> getUsedIDList(World world) {
-		return getUsedIDList(world.provider.dimensionId);
+	public int getLastID(World world) {
+		return getLastID(world.provider.dimensionId);
 	}
 
 	@EventHandler
