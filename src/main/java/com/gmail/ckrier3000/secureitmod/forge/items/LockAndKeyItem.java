@@ -83,7 +83,14 @@ public class LockAndKeyItem extends Item {
 				try {
 					ProtectedTileEntityChest en = new ProtectedTileEntityChest(teChest);
 					world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, en);
-					en.setAll(player.getUniqueID());
+					try {
+						en.setAll(player.getUniqueID());
+					} catch (Exception e) {
+						instance().getLogger().error("Failed to lock!");
+						e.printStackTrace();
+						world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, teChest); //revert.
+						return true;
+					}
 					instance().getLogger().info("Locked!");
 				} catch (Exception e) {
 					e.printStackTrace();
