@@ -76,10 +76,12 @@ public class SecureItMod {
 				break;
 			}
 		}
+		
 		if (id == null) {
 			getLogger().error("Failed to generate a id for lock.");
 			return id;
 		}
+		
 		ids.add(id);
 
 		if (usedLockLists.containsKey(did))
@@ -131,8 +133,10 @@ public class SecureItMod {
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
 					if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getString(LockAndKeyItem.COMPOUND_TAG_KEY_ID))) {
-						if (event.action.equals(event.action.LEFT_CLICK_BLOCK))
+						if (event.action.equals(event.action.LEFT_CLICK_BLOCK)) {
+							MessageUtil.sendMessage(player, "Unlocked chest");
 							unlock(world, x, y, z);
+						}
 						else return;
 					}
 						
