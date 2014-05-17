@@ -34,12 +34,12 @@ public class KeyItem extends Item {
 		return false;
 	}
 	
-	public String getKey(ItemStack stack) {
+	public Integer getKey(ItemStack stack) {
 		if (!stack.getItem().equals(this))
 			return null;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
-			return stack.stackTagCompound.getString(COMPOUND_TAG_KEY_ID);
+			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
 		return null;
 	}
 	

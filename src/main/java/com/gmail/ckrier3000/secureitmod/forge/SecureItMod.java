@@ -68,22 +68,21 @@ public class SecureItMod {
 	public int getNewLockID(World world) {
 		final int did = world.provider.dimensionId;
 
-		if (!usedLockLists.containsKey(did)) {
-			usedLockLists.put(did, 0);
-			return 0;
-		}
-
-		int ret = usedLockLists.get(did) + 1;
+		int ret = getLastID(world) + 1;
 		usedLockLists.put(did, ret);
 		return ret;
 
 	}
 
-	public int getLastID(int demID) {
-		return 0;
+	public Integer getLastID(int did) {
+		if (!usedLockLists.containsKey(did)) {
+			usedLockLists.put(did, 0);
+			return 0;
+		}
+		return usedLockLists.get(did);
 	}
 
-	public int getLastID(World world) {
+	public Integer getLastID(World world) {
 		return getLastID(world.provider.dimensionId);
 	}
 
@@ -119,19 +118,12 @@ public class SecureItMod {
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
 					if (player.getCurrentEquippedItem().stackTagCompound.hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
-						if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getString(KeyItem.COMPOUND_TAG_KEY_ID))) {
-							if (event.action.equals(event.action.LEFT_CLICK_BLOCK)) {
-								MessageUtil.sendMessage(player, "Unlocked chest");
-								unlock(world, x, y, z);
-								return;
-							} else {
-								MessageUtil.sendMessage(player, "Other");
-								return;
-							}
+						if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getInteger(KeyItem.COMPOUND_TAG_KEY_ID))) {
+							return;
+						} else {
+							MessageUtil.sendMessage(player, "Wrong key...");
+							event.setCanceled(true);
 						}
-					MessageUtil.sendMessage(player, "Wrong key...");
-					event.setCanceled(true);
-
 				}
 
 			}
@@ -225,12 +217,12 @@ public class SecureItMod {
 		return ret;
 	}
 
-	public int lock(World world, int x, int y, int z, UUID owner) {
+	public Integer lock(World world, int x, int y, int z, UUID owner) {
 		return lock(world, x, y, z, owner.toString());
 	}
 
-	public int lock(World world, int x, int y, int z, String owner) {
-		int key = getNewLockID(world);
+	public Integer lock(World world, int x, int y, int z, String owner) {
+		Integer key = getNewLockID(world);
 
 		String id = getLocString(x, y, z);
 		NBTTagCompound t = new NBTTagCompound();
@@ -261,7 +253,7 @@ public class SecureItMod {
 		if (!getLocks(world).hasKey(getLocString(x, y, z)))
 			return true;
 		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
-			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getString(COMPOUND_TAG_ID_CHEST_LOCK_ID).equals(key);
+			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
 		else
 			return false;
 	}

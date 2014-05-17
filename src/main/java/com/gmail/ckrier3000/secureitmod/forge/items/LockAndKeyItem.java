@@ -97,6 +97,7 @@ public class LockAndKeyItem extends Item {
 						if (player.inventory.addItemStackToInventory(key))
 							MessageUtil.sendMessage(player, "Good");
 						else
+							player.entityDropItem(key, 1);
 							MessageUtil.sendMessage(player, "Bad");
 					}
 				} else {
