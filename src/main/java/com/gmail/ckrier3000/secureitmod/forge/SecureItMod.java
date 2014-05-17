@@ -95,7 +95,7 @@ public class SecureItMod {
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())) {
+				if (player.getCurrentEquippedItem() == null || !isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) /*player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())*/ && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())) {
 					event.setCanceled(true);
 					
 					MessageUtil.sendMessage(player, "Chest is locked!");
@@ -142,7 +142,7 @@ public class SecureItMod {
 			log.info("HI MAC!!!");
 		} else {
 			log.info("Hi there! You are a normal computer aren't you!");
-			
+			log.info("You are a \"" + System.getProperty("os.name") + "\" Welcome Mr. " + System.getProperty("os.name"));
 		}
 		
 		suggestedConfig = event.getSuggestedConfigurationFile();
@@ -195,7 +195,7 @@ public class SecureItMod {
 		if (isLocked(world, x, y, z))
 			return getLocks(world).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID);
 		else
-			return null;
+			return -1;
 	}
 
 	private NBTTagCompound getLocks(int dim) {

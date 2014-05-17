@@ -70,7 +70,7 @@ public class LockAndKeyItem extends Item {
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
 		
-		SecureItMod.getLogger().info(world.isRemote);
+		SecureItMod.getLogger().info(world.isRemote + "onUse");
 		
 		if (player.isSneaking())
 			if (world.getBlock(x, y, z) instanceof BlockChest) {
@@ -91,6 +91,7 @@ public class LockAndKeyItem extends Item {
 					stack.stackSize--;
 					player.inventory.setItemStack(stack.copy());
 					player.inventory.markDirty();
+					
 				}
 				return true; // Prevent's use from what I tested.
 			}

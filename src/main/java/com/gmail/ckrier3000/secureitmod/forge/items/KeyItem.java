@@ -38,17 +38,17 @@ public class KeyItem extends Item {
 	}
 	
 	
-	public static Integer getKey(ItemStack stack) {
+	public static int getKey(ItemStack stack) {
 		if (stack == null)
-			return null;
+			return -1;
 		
 		if (!stack.getItem().getClass().equals(KeyItem.class))
-			return null;
+			return -1;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
 		
-		return null;
+		return -1;
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ public class KeyItem extends Item {
 	
 	@Override
 	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != null?" ("+getKey(par1ItemStack) + ")":"");
+		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != -1?" ("+getKey(par1ItemStack) + ")":"");
 	}
 	
 	@Override
