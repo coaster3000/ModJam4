@@ -210,12 +210,19 @@ public class SecureItMod {
 	}
 
 	public String lock(World world, int x, int y, int z) {
-		// TODO Auto-generated method stub
-		return false;
+		String key = getNewLockID(world);
+		if (key == null)
+			return null;
+		
+		return null;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public void unlock(World world, int x, int y, int z) {
+		// TODO Auto-generated method stub
 	}
 }
