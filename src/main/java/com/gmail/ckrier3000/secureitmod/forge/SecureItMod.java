@@ -287,11 +287,13 @@ public class SecureItMod {
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-		System.out.println(getLocks(world).hasKey(id));
 		return getLocks(world).hasKey(id);
 	}
 
 	public void unlock(World world, int x, int y, int z) {
-		// TODO Auto-generated method stub
+		if (!isLocked(world, x, y, z))
+			return;
+		
+		getLocks(world).removeTag(getLocString(x, y, z));
 	}
 }
