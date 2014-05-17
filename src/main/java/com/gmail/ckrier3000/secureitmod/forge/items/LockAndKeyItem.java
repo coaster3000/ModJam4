@@ -76,16 +76,13 @@ public class LockAndKeyItem extends Item {
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
 		
-//		if (!world.isRemote)
-//			MessageUtil.sendMessage(player, "NOT REMOTE");
 		if (player.isSneaking())
 			if (world.getBlock(x, y, z) instanceof BlockChest) {
 				if (SecureItMod.instance.isLocked(world, x, y, z))
-					MessageUtil.sendMessage(player, "Already locked!");
+					MessageUtil.sendMessage(player, "Cannot lock already locked chest!");
 				else {
 					if (player.inventory.consumeInventoryItem(this)) {
 						int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
-						MessageUtil.sendMessage(player, "Locked Chest!");
 						ItemStack key = new ItemStack(SecureItMod.keyItem);
 						
 						key.stackTagCompound = new NBTTagCompound();
@@ -98,14 +95,13 @@ public class LockAndKeyItem extends Item {
 							player.entityDropItem(key, 1);
 						} else {
 							if (player.inventory.addItemStackToInventory(key))
-								MessageUtil.sendMessage(player, "Good");
+								SecureItMod.instance.getLogger().debug("Failed consume key and lock");
 							else {
 								player.entityDropItem(key, 1);
-								MessageUtil.sendMessage(player, "Bad");
 							}
 						}
 					} else {
-						MessageUtil.sendMessage(player, "Failed consume key and lock");
+						SecureItMod.instance.getLogger().error("Failed consume key and lock");
 					}
 				}
 				player.inventory.markDirty();

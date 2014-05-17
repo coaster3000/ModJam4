@@ -82,16 +82,17 @@ public class SecureItMod {
 		return getLastID(world.provider.dimensionId);
 	}
 	
-	public Integer getLock(World world, int x, int y, int z) {
-		
+	public Integer getLockID(World world, int x, int y, int z) {
+		if (isLocked(world, x, y, z))
+			return getLocks(world).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID);
+		else
+			return null;
 	}
 
 	private NBTTagCompound getLocks(int dim) {
 		if (lockDataLists.containsKey(dim)) {
-//			System.out.println("getLocks " + dim);
 			return lockDataLists.get(dim);
 		} else {
-//			System.out.println("getLocks else");
 			NBTTagCompound t = new NBTTagCompound();
 			lockDataLists.put(dim, t);
 			return t;
@@ -126,9 +127,12 @@ public class SecureItMod {
 
 	}
 
-	public boolean isKey(World world, int x, int y, int z, int key) {
-		if (!isLocked(world, x, key, z))
+	public boolean isKey(World world, int x, int y, int z, Integer key) {
+		if (!isLocked(world, x, y, z))
 			return true;
+		
+		if (key == null)
+			return false; 
 
 		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
@@ -172,7 +176,6 @@ public class SecureItMod {
 		final int x = event.x, y = event.y, z = event.z;
 		World world = event.world;
 		Block block = event.block;
-//		System.out.println(getLocString(x, y, z));
 		if (block instanceof BlockChest) {
 			BlockChest chest = (BlockChest) block;
 			if (isLocked(world, x, y, z))
@@ -184,16 +187,14 @@ public class SecureItMod {
 	public void onChestAccess(PlayerInteractEvent event) {
 		final int x = event.x, y = event.y, z = event.z;
 		World world = event.entity.worldObj;
-//		System.out.println(getLocString(x, y, z));
 		EntityPlayer player = event.entityPlayer;
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass())) {
+				if (player.getCurrentEquippedItem() == null || !isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass())) {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())) {
-//					System.out.println("---");
 					return;
 				} else {
 					

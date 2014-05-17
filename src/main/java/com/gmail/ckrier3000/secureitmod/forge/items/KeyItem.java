@@ -38,6 +38,9 @@ public class KeyItem extends Item {
 	
 	
 	public static Integer getKey(ItemStack stack) {
+		if (stack == null)
+			return null;
+		
 		if (!stack.getItem().getClass().equals(KeyItem.class))
 			return null;
 		
@@ -50,22 +53,16 @@ public class KeyItem extends Item {
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
-		System.out.println(SecureItMod.instance.isLocked(world, y, z, z) + " isLocked");
-		System.out.println(world.isRemote + " remote");
-		
-		if (SecureItMod.instance.isLocked(world, y, z, z)) {
+		if (SecureItMod.instance.isLocked(world, x, y, z)) {
 			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
 				if (player.isSneaking()) {
-					System.out.println("sneaking - key");
 					SecureItMod.instance.unlock(world, x, y, z);
-					if (stack.stackSize == 1) //Should never have more than one key of same id anyways.
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1).copy());
-					else {
-						stack.stackSize--;
-						player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
-						if (!player.inventory.addItemStackToInventory(lockKey.copy()))
-							player.dropItem(SecureItMod.lockAndKeyItem, 1);
-					}
+					
+					stack.stackSize--;
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
+						player.dropItem(SecureItMod.lockAndKeyItem, 1);
+					
 					MessageUtil.sendMessage(player, "Unlocked chest.");
 					player.inventory.markDirty();
 				}
@@ -85,7 +82,7 @@ public class KeyItem extends Item {
 	
 	@Override
 	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		return super.getItemStackDisplayName(par1ItemStack) + " " + (getKey(par1ItemStack) != null?getKey(par1ItemStack):"");
+		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != null?" ("+getKey(par1ItemStack) + ")":"");
 	}
 	
 	@Override
