@@ -38,28 +38,30 @@ public class KeyItem extends Item {
 	}
 	
 	
-	public static int getKey(ItemStack stack) {
+	public static Integer getKey(ItemStack stack) {
 		if (stack == null)
-			return 0;
+			return null;
 		
 		if (!stack.getItem().getClass().equals(KeyItem.class))
-			return 0;
+			return null;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
 		
-		return 0;
+		return null;
 	}
 	
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+		if (world.isRemote)
+			return true;
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
 		if (SecureItMod.instance.isLocked(world, x, y, z)) {
 			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
 				if (player.isSneaking()) {
 					SecureItMod.instance.unlock(world, x, y, z);
-					
+					if (world.isRemote)
 					stack.stackSize--;
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
 					
@@ -86,7 +88,7 @@ public class KeyItem extends Item {
 	
 	@Override
 	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != -1?" ("+getKey(par1ItemStack) + ")":"");
+		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != null?" ("+getKey(par1ItemStack) + ")":"");
 	}
 	
 	@Override

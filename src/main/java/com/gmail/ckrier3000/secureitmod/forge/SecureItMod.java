@@ -95,7 +95,7 @@ public class SecureItMod {
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) /*player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())*/ && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) /*&& !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())*/) {
+				if (player.getCurrentEquippedItem() == null || (!isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) /*player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())*/ && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass())) /*&& !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())*/) {
 					event.setCanceled(true);
 					
 					MessageUtil.sendMessage(player, "Chest is locked!");
