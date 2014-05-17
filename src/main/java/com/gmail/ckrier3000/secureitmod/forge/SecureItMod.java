@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -17,6 +19,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,10 +34,12 @@ import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
+import com.gmail.ckrier3000.secureitmod.IntegralVector;
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.tileentity.ProtectedTileEntityChest;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
+import com.google.common.collect.MapMaker;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -50,7 +55,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @Mod(modid = "cSecureItMod", version = "1.7.2-1.0", name = "Secure It Mod")
 public class SecureItMod {
 
-	public static final String WORLDINFO_TAG_USED_IDS = "SIUsedIds";
+	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
+	public static final String WORLDINFO_LOCKS = "SILocks";
 	
 	@Instance(value = "cSecureItMod")
 	public static SecureItMod instance;
@@ -62,6 +68,10 @@ public class SecureItMod {
 	private Logger log;
 	
 	private Map<Integer, NBTTagList> usedLockLists;
+	private Map<Integer, NBTTagList> lockDataLists;
+	
+	private ConcurrentMap<IntegralVector, Integer> cached;
+	
 	
 	public static boolean isServer;
 	
@@ -70,9 +80,10 @@ public class SecureItMod {
 		World w = event.world;
 		int id = w.provider.dimensionId;
 		
-		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_TAG_USED_IDS, NBT.TAG_LIST)) {
-			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getTagList(WORLDINFO_TAG_USED_IDS, NBT.TAG_STRING));
-		}
+		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_LIST))
+			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getTagList(WORLDINFO_USEDLOCKS, NBT.TAG_STRING));
+		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
+			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound().getTagList(WORLDINFO_LOCKS, NBT.TAG_COMPOUND));
 	}
 	
 	@SubscribeEvent
@@ -82,12 +93,15 @@ public class SecureItMod {
 		int id = w.provider.dimensionId;
 		
 		if (usedLockLists.containsKey(id))
-			w.getWorldInfo().getNBTTagCompound().setTag(WORLDINFO_TAG_USED_IDS, usedLockLists.get(id));
+			w.getWorldInfo().getNBTTagCompound().setTag(WORLDINFO_LOCKS, usedLockLists.get(id));
+		if (lockDataLists.containsKey(id))
+			w.getWorldInfo().getNBTTagCompound().setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
 	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		isServer = event.getSide().isServer();
+		cached = new ConcurrentHashMap<IntegralVector, Integer>();
 		modConfigurationDirectory = event.getModConfigurationDirectory();
 		log = event.getModLog();
 		suggestedConfig = event.getSuggestedConfigurationFile();
@@ -104,14 +118,16 @@ public class SecureItMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		
 	}
 	
 	@EventHandler
-	public void complete(FMLLoadCompleteEvent event) {
+	public void onComplete(FMLLoadCompleteEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
@@ -156,6 +172,7 @@ public class SecureItMod {
 				break;
 			}
 		}
+		
 		
 		if (id == null) 
 			getLogger().error("Failed to generate a id for lock.");
