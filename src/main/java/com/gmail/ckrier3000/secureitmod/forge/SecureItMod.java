@@ -25,8 +25,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
-import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
-import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
+import com.gmail.ckrier3000.secureitmod.forge.items.*;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -121,7 +120,6 @@ public class SecureItMod {
 
 		EntityPlayer player = event.entityPlayer;
 
-		TileEntity te = world.getTileEntity(x, y, z);
 	}
 
 	@EventHandler
@@ -228,7 +226,10 @@ public class SecureItMod {
 			return null;
 
 		String id = getLocString(x, y, z);
-
+		NBTTagCompound t = new NBTTagCompound();
+		
+		getLocks(world)
+		
 		return key;
 	}
 	
