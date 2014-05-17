@@ -30,6 +30,7 @@ public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 	
 	boolean isActive = false;
+	int lastLock = -1;
 	
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
@@ -64,18 +65,7 @@ public class LockAndKeyItem extends Item {
 	}
 
 	@Override
-	public boolean onItemUse(
-			ItemStack stack, // Non interactive blocks.
-			EntityPlayer player, World world, int x, int y, int z, int side,
-			float hitX, float hitY, float hitZ) {
-		
-		
-		
-		return true;
-	}
-
-	@Override
-	public boolean onItemUseFirst(ItemStack stack,
+	public boolean onItemUse(ItemStack stack,
 			EntityPlayer player, // Interactive blocks.
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
@@ -87,12 +77,12 @@ public class LockAndKeyItem extends Item {
 				if (SecureItMod.instance.isLocked(world, x, y, z))
 					MessageUtil.sendMessage(player, "Cannot lock already locked chest!");
 				else {
-					int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
+					lastLock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
 					ItemStack key = new ItemStack(SecureItMod.keyItem);
 					
 					key.stackTagCompound = new NBTTagCompound();
 					
-					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
+					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lastLock);
 					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
 				
 					if (!player.inventory.addItemStackToInventory(key.copy()))
@@ -100,11 +90,11 @@ public class LockAndKeyItem extends Item {
 					
 					stack.stackSize--;
 					player.inventory.setItemStack(stack.copy());
+					player.inventory.markDirty();
 				}
-				player.inventory.markDirty();
 				return true; // Prevent's use from what I tested.
 			}
-		System.out.println(world.isRemote + " fallback");
+		
 		return false;//SecureItMod.instance.isLocked(world, x, y, z);
 	}
 

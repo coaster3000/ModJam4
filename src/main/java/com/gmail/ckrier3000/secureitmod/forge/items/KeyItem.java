@@ -52,9 +52,7 @@ public class KeyItem extends Item {
 	}
 	
 	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		if (world.isRemote)
-			return true;
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
 		if (SecureItMod.instance.isLocked(world, x, y, z)) {

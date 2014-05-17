@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -135,6 +136,15 @@ public class SecureItMod {
 		isServer = event.getSide().isServer();
 		modConfigurationDirectory = event.getModConfigurationDirectory();
 		log = event.getModLog();
+		
+		if (Minecraft.isRunningOnMac) {
+			log.info("Oh no its a mac!!!!");
+			log.info("HI MAC!!!");
+		} else {
+			log.info("Hi there! You are a normal computer aren't you!");
+			
+		}
+		
 		suggestedConfig = event.getSuggestedConfigurationFile();
 		usedLockLists = new HashMap<Integer, Integer>();
 		lockDataLists = new HashMap<Integer, NBTTagCompound>();
