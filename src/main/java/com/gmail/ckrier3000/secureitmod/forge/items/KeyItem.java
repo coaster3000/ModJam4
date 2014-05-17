@@ -47,10 +47,15 @@ public class KeyItem extends Item {
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
-		if (SecureItMod.instance.isLocked(player.worldObj, y, z, z))
-			if (SecureItMod.instance.isKey(player.worldObj, x, y, z, getKey(stack))) {
+		
+		System.out.println(SecureItMod.instance.isLocked(world, y, z, z) + " isLocked");
+		System.out.println(world.isRemote + " remote");
+		
+		if (SecureItMod.instance.isLocked(world, y, z, z)) {
+			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
 				if (player.isSneaking()) {
-					SecureItMod.instance.unlock(player.worldObj, x, y, z);
+					System.out.println("sneaking - key");
+					SecureItMod.instance.unlock(world, x, y, z);
 					if (stack.stackSize == 1) //Should never have more than one key of same id anyways.
 						player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1).copy());
 					else {
@@ -60,9 +65,12 @@ public class KeyItem extends Item {
 							player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					}
 					MessageUtil.sendMessage(player, "Unlocked chest.");
+					player.inventory.markDirty();
 				}
+			} else {
+				MessageUtil.sendMessage(player, "Wrong key");
 			}
-		player.inventory.markDirty();
+		}
 		
 		return true;
 	}

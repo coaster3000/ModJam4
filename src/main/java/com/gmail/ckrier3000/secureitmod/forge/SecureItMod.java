@@ -180,10 +180,10 @@ public class SecureItMod {
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())) {
+				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(ForceUnlockToolItem.class)) {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
-				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
+				} else if (player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())) {
 					if (player.getCurrentEquippedItem().stackTagCompound.hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 						if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getInteger(KeyItem.COMPOUND_TAG_KEY_ID))) {
 							MessageUtil.sendMessage(player, "Here");
