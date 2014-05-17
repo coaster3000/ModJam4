@@ -26,7 +26,7 @@ import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
-	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockId";
+	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 
 	public LockAndKeyItem() {
@@ -35,6 +35,8 @@ public class LockAndKeyItem extends Item {
 		setMaxStackSize(64);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
+	
+	private boolean useFlag = false;
 
 	@Override
 	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
@@ -80,70 +82,15 @@ public class LockAndKeyItem extends Item {
 			float hitZ) {
 
 		if (world.getBlock(x, y, z) instanceof BlockChest) {
-			BlockChest chest = (BlockChest) world.getBlock(x, y, z);
-			TileEntity te = world.getTileEntity(x, y, z);
-
-			if (te instanceof TileEntityChest
-					&& !(te instanceof ProtectedTileEntityChest)) {
-				TileEntityChest teChest = (TileEntityChest) te;
-				try {
-					ProtectedTileEntityChest en = new ProtectedTileEntityChest(
-							teChest);
-					world.setTileEntity(teChest.xCoord, teChest.yCoord,
-							teChest.zCoord, en);
-					world.mapStorage.saveAllData();
-					try {
-						en.setAll(player.getUniqueID());
-					} catch (Exception e) {
-						instance().getLogger().error("Failed to lock chest!");
-						e.printStackTrace();
-						world.setTileEntity(teChest.xCoord, teChest.yCoord,
-								teChest.zCoord, teChest); // revert.
-						return true;
-					}
-					instance().getLogger().debug("Locked!");
-				} catch (Exception e) {
-					e.printStackTrace();
+			if (SecureItMod.instance.isLocked(world, x, y, z))
+				MessageUtil.sendMessage(player, "Already locked!");
+			else {
+				if (SecureItMod.instance.lock(world, x, y, z)) {
+					
 				}
-				// NBTTagCompound chestTag = new NBTTagCompound();
-				// teChest.writeToNBT(chestTag);
-				//
-				// NBTTagCompound lockTag = new NBTTagCompound();
-				//
-				// if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-				// MessageUtil.sendMessage(player, "Already locked.");
-				// return true;
-				// }
-				//
-				//
-				//
-				// lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
-				// lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER,
-				// player.getUniqueID().toString());
-				//
-				// chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
-				//
-				// te = world.getTileEntity(x, y, z);
-				// if (te instanceof TileEntityChest)
-				// teChest = (TileEntityChest) te;
-				// else
-				// instance().getLogger().error("Lost chest tile entity!");
-				//
-				// teChest.readFromNBT(chestTag);
-				// chestTag = new NBTTagCompound();
-				// teChest.writeToNBT(chestTag);
-				//
-				// if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-				// if (true) //TODO: Replace with a debug config option.
-				// instance().getLogger().info("Lock made successfully");
-				// } else if (true) //TODO: Replace with a debug config option.
-				// instance().getLogger().warn("Lock made failed.");
-				//
-				// return true;
-
-			} else {
-				MessageUtil.sendMessage(player, "Already locked");
 			}
+				
+			
 			return true; // Prevent's use from what I tested.
 		}
 		return false;

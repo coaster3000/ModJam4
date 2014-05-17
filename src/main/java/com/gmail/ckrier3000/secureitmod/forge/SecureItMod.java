@@ -36,7 +36,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
-import com.gmail.ckrier3000.secureitmod.forge.tileentity.ProtectedTileEntityChest;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 import com.google.common.collect.MapMaker;
 
@@ -125,22 +124,6 @@ public class SecureItMod {
 		if (block instanceof BlockChest) {
 			BlockChest chest = (BlockChest) block;
 
-			TileEntity te = world.getTileEntity(x, y, z);
-
-			if (te instanceof TileEntityChest) {
-				MessageUtil.sendMessage(event.getPlayer(), "RanC");
-				System.out.println(te.getClass().getName());
-				if (((TileEntityChest) te) instanceof ProtectedTileEntityChest) // What
-																				// the....
-				{
-					MessageUtil.sendMessage(event.getPlayer(), "RanCA");
-					ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
-					if (!cte.isUseableByPlayer(event.getPlayer())) {
-						event.setCanceled(true);
-						event.setResult(Result.DENY);
-					}
-				}
-			}
 		}
 	}
 
@@ -152,18 +135,8 @@ public class SecureItMod {
 		EntityPlayer player = event.entityPlayer;
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof ProtectedTileEntityChest) // GOOD
-		{
-			System.out.println(te.getClass().getName());
-			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
-			if (!cte.isUseableByPlayer(player)) {
-				MessageUtil.sendMessage(player,
-						"Chest is locked. Must use a key!");
-				event.setCanceled(true);
-			}
-		}
 	}
-
+	
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
