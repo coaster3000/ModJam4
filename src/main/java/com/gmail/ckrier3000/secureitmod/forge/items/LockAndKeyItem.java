@@ -94,7 +94,10 @@ public class LockAndKeyItem extends Item {
 					if (empty < 0) {
 						player.entityDropItem(key, 1);
 					} else {
-						player.inventory.addItemStackToInventory(key);
+						if (player.inventory.addItemStackToInventory(key))
+							MessageUtil.sendMessage(player, "Good");
+						else
+							MessageUtil.sendMessage(player, "Bad");
 					}
 				} else {
 					MessageUtil.sendMessage(player, "Failed consume key and lock");
