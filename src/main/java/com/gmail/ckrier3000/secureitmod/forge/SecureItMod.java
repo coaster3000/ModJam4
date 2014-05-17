@@ -135,7 +135,6 @@ public class SecureItMod {
 		suggestedConfig = event.getSuggestedConfigurationFile();
 		usedLockLists = new HashMap<Integer, Integer>();
 		lockDataLists = new HashMap<Integer, NBTTagCompound>();
-
 	}
 
 	
