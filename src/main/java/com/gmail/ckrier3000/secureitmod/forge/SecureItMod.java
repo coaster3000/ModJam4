@@ -195,7 +195,7 @@ public class SecureItMod {
 			if (te instanceof TileEntityChest)
 			{
 				MessageUtil.sendMessage(event.getPlayer(), "RanC");
-			
+				
 				if (((TileEntityChest)te) instanceof ProtectedTileEntityChest)
 				{
 					MessageUtil.sendMessage(event.getPlayer(), "RanCA");
