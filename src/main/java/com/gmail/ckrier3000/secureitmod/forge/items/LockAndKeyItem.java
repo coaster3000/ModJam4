@@ -76,8 +76,7 @@ public class LockAndKeyItem extends Item {
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
 		
-		if (world.isRemote)
-			return true;
+		SecureItMod.getLogger().info(world.isRemote);
 		
 		if (player.isSneaking())
 			if (world.getBlock(x, y, z) instanceof BlockChest) {
@@ -101,6 +100,7 @@ public class LockAndKeyItem extends Item {
 				player.inventory.markDirty();
 				return true; // Prevent's use from what I tested.
 			}
+		System.out.println(world.isRemote + " fallback");
 		return SecureItMod.instance.isLocked(world, x, y, z);
 	}
 

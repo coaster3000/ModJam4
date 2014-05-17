@@ -47,6 +47,7 @@ public class KeyItem extends Item {
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
+		
 		return null;
 	}
 	

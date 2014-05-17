@@ -18,13 +18,16 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.network.ForgeMessage;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
 
 import com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
@@ -196,8 +199,8 @@ public class SecureItMod {
 	}
 
 	private NBTTagCompound getLocks(World world) {
-		System.out.println(world.provider.dimensionId + "dim unlock");
-		System.out.println(world.isRemote + "dim unlock remote");
+//		System.out.println(world.provider.dimensionId + "dim unlock");
+		
 		return getLocks(world.provider.dimensionId);
 	}
 
@@ -205,8 +208,8 @@ public class SecureItMod {
 		return new StringBuilder().append(x).append(',').append(y).append(',').append(z).toString();
 	}
 
-	public Logger getLogger() {
-		return log;
+	public static Logger getLogger() {
+		return instance.log;
 	}
 
 	public int getNewLockID(World world) {
@@ -215,7 +218,6 @@ public class SecureItMod {
 		int ret = getLastID(world) + 1;
 		usedLockLists.put(did, ret);
 		return ret;
-
 	}
 
 	public boolean isKey(World world, int x, int y, int z, Integer key) {
@@ -223,7 +225,7 @@ public class SecureItMod {
 			return true;
 		
 		if (key == null)
-			return false; 
+			return false;
 
 		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
@@ -233,7 +235,7 @@ public class SecureItMod {
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-		System.out.println(world.provider.dimensionId + "");
+//		System.out.println(world.provider.dimensionId + "");
 		return getLocks(world).hasKey(id);
 	}
 
