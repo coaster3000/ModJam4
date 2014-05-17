@@ -13,6 +13,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.FakePlayer;
 
 public class ProtectedTileEntityChest extends TileEntityChest {
 	
@@ -35,6 +36,8 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 	
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
+		if (player == null /*|| player instanceof FakePlayer*/)
+			return false;
 		
 		Item i;
 		if (player.getCurrentEquippedItem() == null)

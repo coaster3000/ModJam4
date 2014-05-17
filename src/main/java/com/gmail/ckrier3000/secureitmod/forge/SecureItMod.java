@@ -22,6 +22,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
@@ -155,5 +156,42 @@ public class SecureItMod {
 		if (id == null) 
 			getLogger().error("Failed to generate a id for lock.");
 		return id;
+	}
+	
+	@SubscribeEvent
+	public void onChestAccess(PlayerInteractEvent event) {
+		final int x = event.x, y = event.y, z = event.z;
+		World world = event.entity.worldObj;
+		
+		EntityPlayer player = event.entityPlayer;
+		
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof ProtectedTileEntityChest)
+		{
+			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
+			if (!cte.isUseableByPlayer(player)) {
+				MessageUtil.sendMessage(player, "Chest is locked. Must use a key!");
+				event.setCanceled(true);
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onBlockBreak(BreakEvent event) {
+		final int x = event.x, y = event.y, z = event.z;
+		World world = event.world;
+
+		MessageUtil.sendMessage(event.getPlayer(), "Ran");
+		
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof ProtectedTileEntityChest)
+		{
+			MessageUtil.sendMessage(event.getPlayer(), "RanB");
+			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
+			if (!cte.isUseableByPlayer(event.getPlayer())) {
+				event.setCanceled(true);
+				event.setResult(Result.DENY);
+			}
+		}
 	}
 }
