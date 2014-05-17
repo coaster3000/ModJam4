@@ -120,7 +120,7 @@ public class SecureItMod {
 			if (isLocked(world, x, y, z)) {
 //				if (player.getCurrentEquippedItem() != null)
 //					System.out.println(player.getCurrentEquippedItem().getItem().getClass());
-				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().equals(keyItem)) {
+				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())) {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
@@ -129,7 +129,7 @@ public class SecureItMod {
 							MessageUtil.sendMessage(player ,"here");
 							return;
 						} else {
-							MessageUtil.sendMessage(player, "Wrong key...");
+							MessageUtil.sendMessage(player, "Wrong key... Your key is " + KeyItem.getKey(player.getCurrentEquippedItem()));
 							event.setCanceled(true);
 						}
 				}
@@ -147,6 +147,7 @@ public class SecureItMod {
 		World w = event.world;
 		int id = w.provider.dimensionId;
 
+		//XXX: Not really loading for some dumb reason...
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
 			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
@@ -159,6 +160,7 @@ public class SecureItMod {
 
 		int id = w.provider.dimensionId;
 
+		//XXX: Not really saving for some dumb reason.
 		if (usedLockLists.containsKey(id))
 			w.getWorldInfo().getNBTTagCompound().setInteger(WORLDINFO_USEDLOCKS, usedLockLists.get(id));
 		if (lockDataLists.containsKey(id)) {
@@ -168,7 +170,11 @@ public class SecureItMod {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
+		keyItem = new KeyItem().setTextureName("secureitmod:key");
 
+		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
+		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
 	}
 
 	@EventHandler
@@ -180,27 +186,7 @@ public class SecureItMod {
 		usedLockLists = new HashMap<Integer, Integer>();
 		lockDataLists = new HashMap<Integer, NBTTagCompound>();
 
-		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
-		keyItem = new KeyItem().setTextureName("secureitmod:key");
-
-		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
-		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
-	}
-
-	private List<NBTTagCompound> toCompoundList(NBTTagList list) {
-		List<NBTTagCompound> ret = new ArrayList<NBTTagCompound>();
-		for (int i = 0; i < list.tagCount(); i++)
-			ret.add(list.getCompoundTagAt(i));
-
-		return ret;
-	}
-
-	private List<String> toStringList(NBTTagList list) {
-		List<String> ret = new ArrayList<String>();
-		for (int i = 0; i < list.tagCount(); i++)
-			ret.add(list.getStringTagAt(i));
-
-		return ret;
+		
 	}
 
 	private NBTTagCompound getLocks(World world) {

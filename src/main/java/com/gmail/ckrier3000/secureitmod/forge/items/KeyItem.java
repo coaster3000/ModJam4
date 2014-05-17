@@ -36,8 +36,8 @@ public class KeyItem extends Item {
 	
 	
 	
-	public Integer getKey(ItemStack stack) {
-		if (!stack.getItem().equals(this))
+	public static Integer getKey(ItemStack stack) {
+		if (!stack.getItem().getClass().equals(KeyItem.class))
 			return null;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
