@@ -65,11 +65,11 @@ public class KeyItem extends Item {
 						player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					
 					MessageUtil.sendMessage(player, "Unlocked chest.");
-					player.inventory.markDirty();
+					player.inventoryContainer.detectAndSendChanges();
 				}
 				return false;
 			} else {
-				MessageUtil.sendMessage(player, "Wrong key");
+				MessageUtil.sendMessage(player, "Wrong key...");
 			}
 		}
 		

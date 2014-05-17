@@ -105,7 +105,7 @@ public class SecureItMod {
 	public void onWorldLoad(WorldEvent.Load event) {
 		World w = event.world;
 		int id = w.provider.dimensionId;
-
+		
 		// XXX: Not really loading for some dumb reason...
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
 			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
