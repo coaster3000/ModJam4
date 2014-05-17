@@ -22,12 +22,19 @@ import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.forge.proxy.CProxyHandler;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
+
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
+	
+	@SidedProxy(clientSide = "com.gmail.ckrier3000.secureitmod.forge.proxy.ClientCProxyHandler", serverSide = "com.gmail.ckrier3000.secureitmod.forge.proxy.CProxyHandler")
+	static CProxyHandler handle;
 	
 	boolean isActive = false;
 	int lastLock = -1;
@@ -70,7 +77,7 @@ public class LockAndKeyItem extends Item {
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
 		
-		SecureItMod.getLogger().info(world.isRemote + "onUse");
+		SecureItMod.getLogger().info(world.isRemote + "2onUse");
 		
 		if (player.isSneaking())
 			if (world.getBlock(x, y, z) instanceof BlockChest) {
@@ -91,7 +98,6 @@ public class LockAndKeyItem extends Item {
 					stack.stackSize--;
 					player.inventory.setItemStack(stack.copy());
 					player.inventory.markDirty();
-					
 				}
 				return true; // Prevent's use from what I tested.
 			}

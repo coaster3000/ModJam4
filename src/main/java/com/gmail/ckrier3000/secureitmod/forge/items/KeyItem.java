@@ -40,15 +40,15 @@ public class KeyItem extends Item {
 	
 	public static int getKey(ItemStack stack) {
 		if (stack == null)
-			return -1;
+			return 0;
 		
 		if (!stack.getItem().getClass().equals(KeyItem.class))
-			return -1;
+			return 0;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
 		
-		return -1;
+		return 0;
 	}
 	
 	@Override

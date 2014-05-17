@@ -95,7 +95,7 @@ public class SecureItMod {
 		Block b = world.getBlock(x, y, z);
 		if (b instanceof BlockChest)
 			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) /*player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())*/ && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())) {
+				if (player.getCurrentEquippedItem() == null || !isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) /*player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())*/ && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) /*&& !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())*/) {
 					event.setCanceled(true);
 					
 					MessageUtil.sendMessage(player, "Chest is locked!");
@@ -179,23 +179,23 @@ public class SecureItMod {
 		if (usedLockLists.containsKey(id)) usedLockLists.remove(id);
 	}
 	
-	public Integer getLastID(int did) {
+	public int getLastID(int did) {
 		if (!usedLockLists.containsKey(did)) {
-			usedLockLists.put(did, 0);
-			return 0;
+			usedLockLists.put(did, 1);
+			return 1;
 		}
 		return usedLockLists.get(did);
 	}
 
-	public Integer getLastID(World world) {
+	public int getLastID(World world) {
 		return getLastID(world.provider.dimensionId);
 	}
 	
-	public Integer getLockID(World world, int x, int y, int z) {
+	public int getLockID(World world, int x, int y, int z) {
 		if (isLocked(world, x, y, z))
 			return getLocks(world).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID);
 		else
-			return -1;
+			return 0;
 	}
 
 	private NBTTagCompound getLocks(int dim) {
@@ -230,17 +230,18 @@ public class SecureItMod {
 		return ret;
 	}
 
-	public boolean isKey(World world, int x, int y, int z, Integer key) {
+	public boolean isKey(World world, int x, int y, int z, int key) {
 		if (!isLocked(world, x, y, z))
 			return true;
 		
-		if (key == null)
+		if (key == 0)
 			return false;
 
-		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
-			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
-		else
-			return true;
+		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID)) {
+			int r = getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID);
+			return r != 0 && r == key;
+		} else
+			return false;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
