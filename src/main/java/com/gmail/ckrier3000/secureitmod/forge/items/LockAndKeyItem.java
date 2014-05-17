@@ -87,7 +87,7 @@ public class LockAndKeyItem extends Item {
 				MessageUtil.sendMessage(player, "Already locked!");
 			else {
 				if (player.inventory.consumeInventoryItem(this)) {
-					String lock = SecureItMod.instance.lock(world, x, y, z);
+					String lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
 					if (lock != null) {
 						MessageUtil.sendMessage(player, "Locked Chest!");
 						ItemStack key = new ItemStack(SecureItMod.keyItem);

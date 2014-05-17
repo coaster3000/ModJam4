@@ -1,43 +1,32 @@
 package com.gmail.ckrier3000.secureitmod.forge;
 
-import ibxm.Player;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
-import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
-import com.google.common.collect.MapMaker;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -46,7 +35,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -65,7 +53,8 @@ public class SecureItMod {
 	public static final String WORLDINFO_LOCKS = "SILocks";
 	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
 	
-	private Map<Integer, NBTTagList> lockDataLists, usedLockLists;
+	private Map<Integer, NBTTagList> usedLockLists;
+	private Map<Integer, NBTTagCompound> lockDataLists;
 
 	private Logger log;
 	private File modConfigurationDirectory, suggestedConfig;
@@ -101,7 +90,7 @@ public class SecureItMod {
 
 	public List<String> getUsedIDList(int demID) {
 		if (usedLockLists.containsKey(demID))
-			return toList(usedLockLists.get(demID));
+			return toStringList(usedLockLists.get(demID));
 		else
 			return new ArrayList<String>();
 	}
@@ -109,7 +98,7 @@ public class SecureItMod {
 	public List<String> getUsedIDList(World world) {
 		return getUsedIDList(world.provider.dimensionId);
 	}
-
+	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 
@@ -153,8 +142,7 @@ public class SecureItMod {
 					.getTagList(WORLDINFO_USEDLOCKS, NBT.TAG_STRING));
 		if (w.getWorldInfo().getNBTTagCompound()
 				.hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
-			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound()
-					.getTagList(WORLDINFO_LOCKS, NBT.TAG_COMPOUND));
+			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound().getCompoundTag(WORLDINFO_LOCKS));
 	}
 
 	@SubscribeEvent
@@ -193,7 +181,15 @@ public class SecureItMod {
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
 	}
 
-	private List<String> toList(NBTTagList list) {
+	private List<NBTTagCompound> toCompoundList(NBTTagList list) {
+		List<NBTTagCompound> ret = new ArrayList<NBTTagCompound>();
+		for (int i = 0; i < list.tagCount(); i++)
+			ret.add(list.getCompoundTagAt(i));
+
+		return ret;
+	}
+	
+	private List<String> toStringList(NBTTagList list) {
 		List<String> ret = new ArrayList<String>();
 		for (int i = 0; i < list.tagCount(); i++)
 			ret.add(list.getStringTagAt(i));
@@ -209,16 +205,23 @@ public class SecureItMod {
 		return ret;
 	}
 
-	public String lock(World world, int x, int y, int z) {
+	public String lock(World world, int x, int y, int z, UUID owner) {
+		return lock(world, x, y, z, owner.toString());
+	}
+	
+	public String lock(World world, int x, int y, int z, String owner) {
 		String key = getNewLockID(world);
 		if (key == null)
 			return null;
 		
-		return null;
+		String id = new StringBuilder().append(x).append(',').append(y).append(',').append(z).toString();
+		
+		return key;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
-		// TODO Auto-generated method stub
+		
+		
 		return false;
 	}
 	
