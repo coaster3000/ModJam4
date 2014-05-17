@@ -92,12 +92,10 @@ public class LockAndKeyItem extends Item {
 						MessageUtil.sendMessage(player, "Locked Chest!");
 						ItemStack key = new ItemStack(SecureItMod.keyItem);
 						
-						NBTTagCompound tag = new NBTTagCompound();
+						key.stackTagCompound = new NBTTagCompound();
 						
-						tag.setString(COMPOUND_TAG_KEY_ID, lock);
-						tag.setString(COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
-						
-						key.setTagCompound(tag);
+						key.stackTagCompound.setString(COMPOUND_TAG_KEY_ID, lock);
+						key.stackTagCompound.setString(COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
 						
 						int empty = player.inventory.getFirstEmptyStack();
 						if (empty < 0) {

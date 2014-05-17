@@ -130,8 +130,12 @@ public class SecureItMod {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
-					if (event.action.equals(event.action.LEFT_CLICK_BLOCK))
-						unlock(world, x, y, z, player.getCurrentEquippedItem().getTagCompound().getString(LockAndKeyItem.COMPOUND_TAG_KEY_ID));
+					if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getString(LockAndKeyItem.COMPOUND_TAG_KEY_ID))) {
+						if (event.action.equals(event.action.LEFT_CLICK_BLOCK))
+							unlock(world, x, y, z);
+						else return;
+					}
+						
 				}
 					
 			}
