@@ -132,15 +132,22 @@ public class SecureItMod {
 					event.setCanceled(true);
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				} else if (player.getCurrentEquippedItem().getItem().equals(keyItem)) {
-					if (player.getCurrentEquippedItem().stackTagCompound.hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
+					if (player.getCurrentEquippedItem().stackTagCompound != null && player.getCurrentEquippedItem().stackTagCompound.hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 						if (isKey(world, x, y, z, player.getCurrentEquippedItem().stackTagCompound.getString(LockAndKeyItem.COMPOUND_TAG_KEY_ID))) {
 							if (event.action.equals(event.action.LEFT_CLICK_BLOCK)) {
 								MessageUtil.sendMessage(player, "Unlocked chest");
 								unlock(world, x, y, z);
+								return;
 							}
-							else return;
-						}
+							else {
+								MessageUtil.sendMessage(player, "Other");
+								return;
+							}
+						} 
+					MessageUtil.sendMessage(player, "Wrong key...");
+					event.setCanceled(true);
 						
+					
 				}
 					
 			}
@@ -278,7 +285,11 @@ public class SecureItMod {
 	}
 	
 	public boolean isKey(World world, int x, int y, int z, String key) {
-		return true;
+		if (!getLocks(world).hasKey(getLocString(x, y, z)))
+			return true;
+		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
+			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getString(COMPOUND_TAG_ID_CHEST_LOCK_ID).equals(key);
+		else return false;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
