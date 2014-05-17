@@ -78,39 +78,39 @@ public class LockAndKeyItem extends Item {
 		
 //		if (!world.isRemote)
 //			MessageUtil.sendMessage(player, "NOT REMOTE");
-		
-		if (world.getBlock(x, y, z) instanceof BlockChest) {
-			if (SecureItMod.instance.isLocked(world, x, y, z))
-				MessageUtil.sendMessage(player, "Already locked!");
-			else {
-				if (player.inventory.consumeInventoryItem(this)) {
-					int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
-					MessageUtil.sendMessage(player, "Locked Chest!");
-					ItemStack key = new ItemStack(SecureItMod.keyItem);
-					
-					key.stackTagCompound = new NBTTagCompound();
-					
-					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
-					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
-					
-					int empty = player.inventory.getFirstEmptyStack();
-					if (empty < 0) {
-						player.entityDropItem(key, 1);
-					} else {
-						if (player.inventory.addItemStackToInventory(key))
-							MessageUtil.sendMessage(player, "Good");
-						else {
+		if (player.isSneaking())
+			if (world.getBlock(x, y, z) instanceof BlockChest) {
+				if (SecureItMod.instance.isLocked(world, x, y, z))
+					MessageUtil.sendMessage(player, "Already locked!");
+				else {
+					if (player.inventory.consumeInventoryItem(this)) {
+						int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
+						MessageUtil.sendMessage(player, "Locked Chest!");
+						ItemStack key = new ItemStack(SecureItMod.keyItem);
+						
+						key.stackTagCompound = new NBTTagCompound();
+						
+						key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
+						key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
+						
+						int empty = player.inventory.getFirstEmptyStack();
+						if (empty < 0) {
 							player.entityDropItem(key, 1);
-							MessageUtil.sendMessage(player, "Bad");
+						} else {
+							if (player.inventory.addItemStackToInventory(key))
+								MessageUtil.sendMessage(player, "Good");
+							else {
+								player.entityDropItem(key, 1);
+								MessageUtil.sendMessage(player, "Bad");
+							}
 						}
+					} else {
+						MessageUtil.sendMessage(player, "Failed consume key and lock");
 					}
-				} else {
-					MessageUtil.sendMessage(player, "Failed consume key and lock");
 				}
+				player.inventory.markDirty();
+				return true; // Prevent's use from what I tested.
 			}
-			player.inventory.markDirty();
-			return true; // Prevent's use from what I tested.
-		}
 		return false;
 	}
 	
