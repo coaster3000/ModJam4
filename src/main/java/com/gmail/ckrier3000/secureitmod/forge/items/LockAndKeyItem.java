@@ -21,7 +21,6 @@ import net.minecraftforge.common.util.Constants.NBT;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
-import com.gmail.ckrier3000.secureitmod.forge.tileentity.ProtectedTileEntityChest;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 public class LockAndKeyItem extends Item {
@@ -85,8 +84,17 @@ public class LockAndKeyItem extends Item {
 			if (SecureItMod.instance.isLocked(world, x, y, z))
 				MessageUtil.sendMessage(player, "Already locked!");
 			else {
-				if (SecureItMod.instance.lock(world, x, y, z)) {
-					
+				if (player.inventory.consumeInventoryItem(this)) {
+					String lock = SecureItMod.instance.lock(world, x, y, z)
+					if (lock != null) {
+						MessageUtil.sendMessage(player, "Locked Chest!");
+						
+					} else {
+						MessageUtil.sendMessage(player, "Failed to lock chest!");
+						
+					}
+				} else {
+					MessageUtil.sendMessage(player, "Failed consume key and lock");
 				}
 			}
 				

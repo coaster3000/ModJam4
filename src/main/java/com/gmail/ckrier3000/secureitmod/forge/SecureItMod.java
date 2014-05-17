@@ -208,4 +208,14 @@ public class SecureItMod {
 			ret.appendTag(new NBTTagString(item));
 		return ret;
 	}
+
+	public String lock(World world, int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean isLocked(World world, int x, int y, int z) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
