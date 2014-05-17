@@ -86,12 +86,12 @@ public class LockAndKeyItem extends Item {
 					try {
 						en.setAll(player.getUniqueID());
 					} catch (Exception e) {
-						instance().getLogger().error("Failed to lock!");
+						instance().getLogger().error("Failed to lock chest!");
 						e.printStackTrace();
 						world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, teChest); //revert.
 						return true;
 					}
-					instance().getLogger().info("Locked!");
+					instance().getLogger().debug("Locked!");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

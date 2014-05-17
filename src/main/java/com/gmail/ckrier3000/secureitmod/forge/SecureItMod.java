@@ -9,11 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,6 +24,7 @@ import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 
@@ -177,20 +181,30 @@ public class SecureItMod {
 	}
 	
 	@SubscribeEvent
-	public void onBlockBreak(BreakEvent event) {
+	public void onBlockBreak(BlockEvent.BreakEvent event) {
 		final int x = event.x, y = event.y, z = event.z;
 		World world = event.world;
-
-		MessageUtil.sendMessage(event.getPlayer(), "Ran");
+		Block block = event.block;
 		
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof ProtectedTileEntityChest)
+		if (block instanceof BlockChest)
 		{
-			MessageUtil.sendMessage(event.getPlayer(), "RanB");
-			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
-			if (!cte.isUseableByPlayer(event.getPlayer())) {
-				event.setCanceled(true);
-				event.setResult(Result.DENY);
+			BlockChest chest = (BlockChest) block;
+			
+			TileEntity te = world.getTileEntity(x, y, z);
+			
+			if (te instanceof TileEntityChest)
+			{
+				MessageUtil.sendMessage(event.getPlayer(), "RanC");
+			
+				if (((TileEntityChest)te) instanceof ProtectedTileEntityChest)
+				{
+					MessageUtil.sendMessage(event.getPlayer(), "RanC");
+					ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
+					if (!cte.isUseableByPlayer(event.getPlayer())) {
+						event.setCanceled(true);
+						event.setResult(Result.DENY);
+					}
+				}
 			}
 		}
 	}
