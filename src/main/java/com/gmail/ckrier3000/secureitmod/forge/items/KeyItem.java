@@ -53,7 +53,7 @@ public class KeyItem extends Item {
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z,
 			EntityPlayer player) {
-		
+		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem,1);
 		if (SecureItMod.instance.isLocked(player.worldObj, y, z, z))
 			if (SecureItMod.instance.isKey(player.worldObj, x, y, z, getKey(stack))) {
 				SecureItMod.instance.unlock(player.worldObj, x, y, z);
@@ -61,8 +61,8 @@ public class KeyItem extends Item {
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1));
 				else {
 					stack.stackSize--;
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack);
-					if (!player.inventory.addItemStackToInventory(new ItemStack(SecureItMod.lockAndKeyItem,1)))
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
 						player.dropItem(SecureItMod.lockAndKeyItem, 1);
 				}
 				MessageUtil.sendMessage(player, "Unlocked chest.");
