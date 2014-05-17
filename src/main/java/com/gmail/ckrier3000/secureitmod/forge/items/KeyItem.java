@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.DerivedWorldInfo;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -51,6 +52,8 @@ public class KeyItem extends Item {
 	
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+		if (world.isRemote)
+			return true;
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
 		if (SecureItMod.instance.isLocked(world, x, y, z)) {
@@ -65,7 +68,7 @@ public class KeyItem extends Item {
 						player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					
 					MessageUtil.sendMessage(player, "Unlocked chest.");
-					player.inventoryContainer.detectAndSendChanges();
+					player.inventory.markDirty();
 				}
 				return false;
 			} else {

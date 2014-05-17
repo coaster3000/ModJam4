@@ -76,6 +76,9 @@ public class LockAndKeyItem extends Item {
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
 		
+		if (world.isRemote)
+			return true;
+		
 		if (player.isSneaking())
 			if (world.getBlock(x, y, z) instanceof BlockChest) {
 				if (SecureItMod.instance.isLocked(world, x, y, z))
