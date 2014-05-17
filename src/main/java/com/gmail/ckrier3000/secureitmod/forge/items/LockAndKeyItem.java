@@ -17,6 +17,7 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -39,24 +40,6 @@ public class LockAndKeyItem extends Item {
 	
 	private boolean useFlag = false;
 
-	@Override
-	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
-		return 0;
-	}
-
-	@Override
-	public void getSubItems(Item item, CreativeTabs tab,
-			List rets) {
-		ItemStack i = new ItemStack(item, 1);
-		i.stackTagCompound = new NBTTagCompound();
-		rets.add(i);
-	}
-	
-	@Override
-	public int getHarvestLevel(ItemStack stack, String toolClass) {
-		return 0;
-	}
-
 	// Purely a helper function for less typing for now. Maybe will keep it.
 	private SecureItMod instance() {
 		return SecureItMod.instance;
@@ -74,6 +57,11 @@ public class LockAndKeyItem extends Item {
 		player.swingItem();
 		return stack;
 	}
+	
+	@Override
+	public boolean canItemEditBlocks() {
+		return false;
+	}
 
 	@Override
 	public boolean onItemUse(
@@ -81,7 +69,7 @@ public class LockAndKeyItem extends Item {
 			EntityPlayer player, World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ) {
 
-		return false;
+		return true;
 	}
 	
 	
@@ -120,7 +108,7 @@ public class LockAndKeyItem extends Item {
 							for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
 								if (player.inventory.getStackInSlot(i).stackSize < player.inventory.getStackInSlot(i).getMaxStackSize()) {
 									player.inventory.getStackInSlot(i).stackSize++;
-									return true;
+									return false;
 								}
 							}
 							player.dropItem(this, 1);
@@ -130,11 +118,11 @@ public class LockAndKeyItem extends Item {
 					MessageUtil.sendMessage(player, "Failed consume key and lock");
 				}
 			}
-				
-			
 			return true; // Prevent's use from what I tested.
 		}
 		return false;
 	}
-
+	
+	
+	
 }
