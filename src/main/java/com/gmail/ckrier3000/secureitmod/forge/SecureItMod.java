@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
+import com.gmail.ckrier3000.secureitmod.forge.listeners.DebugToolListener;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.Mod;
@@ -124,7 +125,7 @@ public class SecureItMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-
+		
 	}
 
 	public boolean isKey(World world, int x, int y, int z, Integer key) {
@@ -203,6 +204,8 @@ public class SecureItMod {
 
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
+		MinecraftForge.EVENT_BUS.register(this);
+		debugListener = new DebugToolListener();
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
