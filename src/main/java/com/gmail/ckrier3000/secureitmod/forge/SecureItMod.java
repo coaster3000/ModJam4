@@ -244,8 +244,9 @@ public class SecureItMod {
 	}
 
 	public boolean isKey(World world, int x, int y, int z, int key) {
-		if (!getLocks(world).hasKey(getLocString(x, y, z)))
+		if (!isLocked(world, x, key, z))
 			return true;
+		
 		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
 		else
