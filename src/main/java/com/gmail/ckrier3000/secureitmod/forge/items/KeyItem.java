@@ -60,12 +60,14 @@ public class KeyItem extends Item {
 					
 					stack.stackSize--;
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+					
 					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
 						player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					
 					MessageUtil.sendMessage(player, "Unlocked chest.");
 					player.inventory.markDirty();
 				}
+				return false;
 			} else {
 				MessageUtil.sendMessage(player, "Wrong key");
 			}

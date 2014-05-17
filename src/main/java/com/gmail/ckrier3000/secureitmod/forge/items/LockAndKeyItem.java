@@ -81,28 +81,18 @@ public class LockAndKeyItem extends Item {
 				if (SecureItMod.instance.isLocked(world, x, y, z))
 					MessageUtil.sendMessage(player, "Cannot lock already locked chest!");
 				else {
-					if (player.inventory.consumeInventoryItem(this)) {
-						int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
-						ItemStack key = new ItemStack(SecureItMod.keyItem);
-						
-						key.stackTagCompound = new NBTTagCompound();
-						
-						key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
-						key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
-						
-						int empty = player.inventory.getFirstEmptyStack();
-						if (empty < 0) {
-							player.entityDropItem(key, 1);
-						} else {
-							if (player.inventory.addItemStackToInventory(key))
-								SecureItMod.instance.getLogger().debug("Failed consume key and lock");
-							else {
-								player.entityDropItem(key, 1);
-							}
-						}
-					} else {
-						SecureItMod.instance.getLogger().error("Failed consume key and lock");
-					}
+					int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
+					ItemStack key = new ItemStack(SecureItMod.keyItem);
+					
+					key.stackTagCompound = new NBTTagCompound();
+					
+					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
+					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
+				
+					if (!player.inventory.addItemStackToInventory(key.copy()))
+						player.entityDropItem(key, 1);
+					
+					stack.stackSize--;
 				}
 				player.inventory.markDirty();
 				return true; // Prevent's use from what I tested.
