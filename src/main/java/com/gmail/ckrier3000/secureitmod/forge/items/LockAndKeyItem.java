@@ -28,9 +28,7 @@ public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
-	
-	boolean isActive = false;
-	
+
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
@@ -68,9 +66,7 @@ public class LockAndKeyItem extends Item {
 			ItemStack stack, // Non interactive blocks.
 			EntityPlayer player, World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ) {
-		
-		
-		
+
 		return true;
 	}
 
@@ -79,8 +75,6 @@ public class LockAndKeyItem extends Item {
 			EntityPlayer player, // Interactive blocks.
 			World world, int x, int y, int z, int side, float hitX, float hitY,
 			float hitZ) {
-		
-		SecureItMod.getLogger().info(world.isRemote);
 		
 		if (player.isSneaking())
 			if (world.getBlock(x, y, z) instanceof BlockChest) {
@@ -104,8 +98,7 @@ public class LockAndKeyItem extends Item {
 				player.inventory.markDirty();
 				return true; // Prevent's use from what I tested.
 			}
-		System.out.println(world.isRemote + " fallback");
-		return false;//SecureItMod.instance.isLocked(world, x, y, z);
+		return SecureItMod.instance.isLocked(world, x, y, z);
 	}
 
 	@Override

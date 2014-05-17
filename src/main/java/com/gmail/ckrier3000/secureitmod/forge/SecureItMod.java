@@ -9,7 +9,6 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,16 +18,13 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.network.ForgeMessage;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
 
 import com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
@@ -74,128 +70,23 @@ public class SecureItMod {
 	private File modConfigurationDirectory, suggestedConfig;
 	private Map<Integer, Integer> usedLockLists;
 
-
-	@SubscribeEvent
-	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		final int x = event.x, y = event.y, z = event.z;
-		World world = event.world;
-		Block block = event.block;
-		if (block instanceof BlockChest) {
-			BlockChest chest = (BlockChest) block;
-			if (isLocked(world, x, y, z))
-				event.setCanceled(true);
-		}
-	}
-	
-	@SubscribeEvent
-	public void onChestAccess(PlayerInteractEvent event) {
-		final int x = event.x, y = event.y, z = event.z;
-		World world = event.entity.worldObj;
-		EntityPlayer player = event.entityPlayer;
-		Block b = world.getBlock(x, y, z);
-		if (b instanceof BlockChest)
-			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || (!isKey(world, x, y, z, KeyItem.getKey(player.getCurrentEquippedItem())) /*player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass())*/ && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass())) /*&& !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())*/) {
-					event.setCanceled(true);
-					
-					MessageUtil.sendMessage(player, "Chest is locked!");
-				} else
-					return;
-
-			}
-	}
-
-	@SubscribeEvent
-	public void onWorldLoad(WorldEvent.Load event) {
-		World w = event.world;
-		int id = w.provider.dimensionId;
-		
-		// XXX: Not really loading for some dumb reason...
-		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
-			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
-		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
-			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound().getCompoundTag(WORLDINFO_LOCKS));
-	}
-
-	@SubscribeEvent
-	public void onWorldSave(WorldEvent.Save event) {
-		World w = event.world;
-
-		int id = w.provider.dimensionId;
-
-		// XXX: Not really saving for some dumb reason.
-		if (usedLockLists.containsKey(id))
-			w.getWorldInfo().getNBTTagCompound().setInteger(WORLDINFO_USEDLOCKS, usedLockLists.get(id));
-		if (lockDataLists.containsKey(id)) {
-			w.getWorldInfo().getNBTTagCompound().setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
-		}
-	}
-
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		isServer = event.getSide().isServer();
-		modConfigurationDirectory = event.getModConfigurationDirectory();
-		log = event.getModLog();
-		
-		if (Minecraft.isRunningOnMac) {
-			log.info("Oh no its a mac!!!!");
-			log.info("HI MAC!!!");
-		} else {
-			log.info("Hi there! You are a normal computer aren't you!");
-			log.info("You are a \"" + System.getProperty("os.name") + "\" Welcome Mr. " + System.getProperty("os.name"));
-		}
-		
-		suggestedConfig = event.getSuggestedConfigurationFile();
-		usedLockLists = new HashMap<Integer, Integer>();
-		lockDataLists = new HashMap<Integer, NBTTagCompound>();
-	}
-
-	
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
-		keyItem = new KeyItem().setTextureName("secureitmod:key");
-		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:forceUnlock");
-		
-		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
-		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
-		GameRegistry.registerItem(forceUnlockItem, forceUnlockItem.getUnlocalizedName());
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
-	}
-	
-	@EventHandler
-	public void onComplete(FMLLoadCompleteEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-	
-	@SubscribeEvent
-	public void onExit(WorldEvent.Unload event) {
-		int id = event.world.provider.dimensionId;
-		
-		if (lockDataLists.containsKey(id)) lockDataLists.remove(id);
-		if (usedLockLists.containsKey(id)) usedLockLists.remove(id);
-	}
-	
-	public int getLastID(int did) {
+	public Integer getLastID(int did) {
 		if (!usedLockLists.containsKey(did)) {
-			usedLockLists.put(did, 1);
-			return 1;
+			usedLockLists.put(did, 0);
+			return 0;
 		}
 		return usedLockLists.get(did);
 	}
 
-	public int getLastID(World world) {
+	public Integer getLastID(World world) {
 		return getLastID(world.provider.dimensionId);
 	}
 	
-	public int getLockID(World world, int x, int y, int z) {
+	public Integer getLockID(World world, int x, int y, int z) {
 		if (isLocked(world, x, y, z))
 			return getLocks(world).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID);
 		else
-			return 0;
+			return null;
 	}
 
 	private NBTTagCompound getLocks(int dim) {
@@ -209,8 +100,8 @@ public class SecureItMod {
 	}
 
 	private NBTTagCompound getLocks(World world) {
-//		System.out.println(world.provider.dimensionId + "dim unlock");
-		
+		System.out.println(world.provider.dimensionId + "dim unlock");
+		System.out.println(world.isRemote + "dim unlock remote");
 		return getLocks(world.provider.dimensionId);
 	}
 
@@ -218,8 +109,8 @@ public class SecureItMod {
 		return new StringBuilder().append(x).append(',').append(y).append(',').append(z).toString();
 	}
 
-	public static Logger getLogger() {
-		return instance.log;
+	public Logger getLogger() {
+		return log;
 	}
 
 	public int getNewLockID(World world) {
@@ -228,25 +119,30 @@ public class SecureItMod {
 		int ret = getLastID(world) + 1;
 		usedLockLists.put(did, ret);
 		return ret;
+
 	}
 
-	public boolean isKey(World world, int x, int y, int z, int key) {
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+
+	}
+
+	public boolean isKey(World world, int x, int y, int z, Integer key) {
 		if (!isLocked(world, x, y, z))
 			return true;
 		
-		if (key == 0)
-			return false;
+		if (key == null)
+			return false; 
 
-		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID)) {
-			int r = getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID);
-			return r != 0 && r == key;
-		} else
-			return false;
+		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
+			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
+		else
+			return true;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-//		System.out.println(world.provider.dimensionId + "");
+		System.out.println(world.provider.dimensionId + "");
 		return getLocks(world).hasKey(id);
 	}
 
@@ -273,6 +169,90 @@ public class SecureItMod {
 
 	public Integer lock(World world, int x, int y, int z, UUID owner) {
 		return lock(world, x, y, z, (owner!= null) ? owner.toString() : null);
+	}
+
+	@SubscribeEvent
+	public void onBlockBreak(BlockEvent.BreakEvent event) {
+		final int x = event.x, y = event.y, z = event.z;
+		World world = event.world;
+		Block block = event.block;
+		if (block instanceof BlockChest) {
+			BlockChest chest = (BlockChest) block;
+			if (isLocked(world, x, y, z))
+				event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public void onChestAccess(PlayerInteractEvent event) {
+		final int x = event.x, y = event.y, z = event.z;
+		World world = event.entity.worldObj;
+		EntityPlayer player = event.entityPlayer;
+		Block b = world.getBlock(x, y, z);
+		if (b instanceof BlockChest)
+			if (isLocked(world, x, y, z)) {
+				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())) {
+					event.setCanceled(true);
+					
+					MessageUtil.sendMessage(player, "Chest is locked!");
+				} else
+					return;
+
+			}
+	}
+
+	@EventHandler
+	public void onComplete(FMLLoadCompleteEvent event) {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event) {
+		World w = event.world;
+		int id = w.provider.dimensionId;
+
+		// XXX: Not really loading for some dumb reason...
+		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
+			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
+		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
+			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound().getCompoundTag(WORLDINFO_LOCKS));
+	}
+
+	@SubscribeEvent
+	public void onWorldSave(WorldEvent.Save event) {
+		World w = event.world;
+
+		int id = w.provider.dimensionId;
+
+		// XXX: Not really saving for some dumb reason.
+		if (usedLockLists.containsKey(id))
+			w.getWorldInfo().getNBTTagCompound().setInteger(WORLDINFO_USEDLOCKS, usedLockLists.get(id));
+		if (lockDataLists.containsKey(id)) {
+			w.getWorldInfo().getNBTTagCompound().setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
+		}
+	}
+
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
+		keyItem = new KeyItem().setTextureName("secureitmod:key");
+		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:forceUnlock");
+		
+
+		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
+		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
+		GameRegistry.registerItem(forceUnlockItem, forceUnlockItem.getUnlocalizedName());
+	}
+
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		isServer = event.getSide().isServer();
+		modConfigurationDirectory = event.getModConfigurationDirectory();
+		log = event.getModLog();
+		suggestedConfig = event.getSuggestedConfigurationFile();
+		usedLockLists = new HashMap<Integer, Integer>();
+		lockDataLists = new HashMap<Integer, NBTTagCompound>();
+
 	}
 
 	private void setLocks(int dimensionId, NBTTagCompound a) {

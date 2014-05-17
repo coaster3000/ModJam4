@@ -17,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.DerivedWorldInfo;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -47,21 +46,18 @@ public class KeyItem extends Item {
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
-		
 		return null;
 	}
 	
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		if (world.isRemote)
-			return true;
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
 		if (SecureItMod.instance.isLocked(world, x, y, z)) {
 			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
 				if (player.isSneaking()) {
 					SecureItMod.instance.unlock(world, x, y, z);
-					if (world.isRemote)
+					
 					stack.stackSize--;
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
 					
@@ -73,7 +69,7 @@ public class KeyItem extends Item {
 				}
 				return false;
 			} else {
-				MessageUtil.sendMessage(player, "Wrong key...");
+				MessageUtil.sendMessage(player, "Wrong key");
 			}
 		}
 		
