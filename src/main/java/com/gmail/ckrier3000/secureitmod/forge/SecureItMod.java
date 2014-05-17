@@ -50,6 +50,8 @@ public class SecureItMod {
 
 	public static final String WORLDINFO_LOCKS = "SILocks";
 	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
+	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
+	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 
 	private Map<Integer, NBTTagList> usedLockLists;
 	private Map<Integer, NBTTagCompound> lockDataLists;
@@ -109,7 +111,8 @@ public class SecureItMod {
 
 		if (block instanceof BlockChest) {
 			BlockChest chest = (BlockChest) block;
-
+			if (isLocked(world, x, y, z))
+				event.setCanceled(true);
 		}
 	}
 
@@ -151,9 +154,12 @@ public class SecureItMod {
 		if (usedLockLists.containsKey(id))
 			w.getWorldInfo().getNBTTagCompound()
 					.setTag(WORLDINFO_LOCKS, usedLockLists.get(id));
-		if (lockDataLists.containsKey(id))
+		if (lockDataLists.containsKey(id)) {
 			w.getWorldInfo().getNBTTagCompound()
-					.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
+			.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
+			
+		}
+
 	}
 
 	@EventHandler
@@ -168,6 +174,7 @@ public class SecureItMod {
 		log = event.getModLog();
 		suggestedConfig = event.getSuggestedConfigurationFile();
 		usedLockLists = new HashMap<Integer, NBTTagList>();
+		lockDataLists = new HashMap<Integer, NBTTagCompound>();
 
 		lockAndKeyItem = new LockAndKeyItem()
 				.setTextureName("secureitmod:lockAndKey");
@@ -227,21 +234,34 @@ public class SecureItMod {
 
 		String id = getLocString(x, y, z);
 		NBTTagCompound t = new NBTTagCompound();
-		
-		getLocks(world)
-		
+		t.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, key);
+		t.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, owner);
+		NBTTagCompound a = getLocks(world);
+		a.setTag(id, t);
+
+		setLocks(world, a);
+		getLocks(world).setTag(id, t);
+
 		return key;
 	}
-	
+
+	private void setLocks(World world, NBTTagCompound a) {
+		setLocks(world.provider.dimensionId, a);
+	}
+
+	private void setLocks(int dimensionId, NBTTagCompound a) {
+		lockDataLists.put(dimensionId, a);
+	}
+
 	private String getLocString(int x, int y, int z) {
-		return new StringBuilder().append(x).append(',').append(y)
-		.append(',').append(z).toString();
+		return new StringBuilder().append(x).append(',').append(y).append(',')
+				.append(z).toString();
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-		
-		return getLocks(world).hasKey(id, NBT.TAG_COMPOUND);
+		System.out.println(getLocks(world).hasKey(id));
+		return getLocks(world).hasKey(id);
 	}
 
 	public void unlock(World world, int x, int y, int z) {
