@@ -8,5 +8,5 @@ public class ProtectedBlockChest extends BlockChest {
 	public ProtectedBlockChest(int p_i45397_1_) {
 		super(p_i45397_1_);
 	}
-	
+
 }

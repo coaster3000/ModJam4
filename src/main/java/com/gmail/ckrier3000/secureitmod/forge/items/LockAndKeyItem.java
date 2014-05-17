@@ -26,8 +26,8 @@ import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 public class LockAndKeyItem extends Item {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
-	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockId";
+	static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 
 	public LockAndKeyItem() {
 		setCreativeTab(CreativeTabs.tabTools);
@@ -37,8 +37,8 @@ public class LockAndKeyItem extends Item {
 	}
 
 	@Override
-	public boolean isDamageable() {
-		return false;
+	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
+		return 0;
 	}
 
 	@Override
@@ -46,9 +46,14 @@ public class LockAndKeyItem extends Item {
 		return 0;
 	}
 
+	// Purely a helper function for less typing for now. Maybe will keep it.
+	private SecureItMod instance() {
+		return SecureItMod.instance;
+	}
+
 	@Override
-	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
-		return 0;
+	public boolean isDamageable() {
+		return false;
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class LockAndKeyItem extends Item {
 			ItemStack stack, // Non interactive blocks.
 			EntityPlayer player, World world, int x, int y, int z, int side,
 			float hitX, float hitY, float hitZ) {
-			
+
 		return false;
 	}
 
@@ -77,71 +82,71 @@ public class LockAndKeyItem extends Item {
 		if (world.getBlock(x, y, z) instanceof BlockChest) {
 			BlockChest chest = (BlockChest) world.getBlock(x, y, z);
 			TileEntity te = world.getTileEntity(x, y, z);
-			
-			if (te instanceof TileEntityChest && !(te instanceof ProtectedTileEntityChest)) {
+
+			if (te instanceof TileEntityChest
+					&& !(te instanceof ProtectedTileEntityChest)) {
 				TileEntityChest teChest = (TileEntityChest) te;
 				try {
-					ProtectedTileEntityChest en = new ProtectedTileEntityChest(teChest);
-					world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, en);
+					ProtectedTileEntityChest en = new ProtectedTileEntityChest(
+							teChest);
+					world.setTileEntity(teChest.xCoord, teChest.yCoord,
+							teChest.zCoord, en);
 					world.mapStorage.saveAllData();
 					try {
 						en.setAll(player.getUniqueID());
 					} catch (Exception e) {
 						instance().getLogger().error("Failed to lock chest!");
 						e.printStackTrace();
-						world.setTileEntity(teChest.xCoord, teChest.yCoord, teChest.zCoord, teChest); //revert.
+						world.setTileEntity(teChest.xCoord, teChest.yCoord,
+								teChest.zCoord, teChest); // revert.
 						return true;
 					}
 					instance().getLogger().debug("Locked!");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-//				NBTTagCompound chestTag = new NBTTagCompound();
-//				teChest.writeToNBT(chestTag);
-//				
-//				NBTTagCompound lockTag = new NBTTagCompound();
-//				
-//				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-//					MessageUtil.sendMessage(player, "Already locked.");
-//					return true;
-//				}
-//				
-//				
-//
-//				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
-//				lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER, player.getUniqueID().toString());
-//				
-//				chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
-//				
-//				te = world.getTileEntity(x, y, z);
-//				if (te instanceof TileEntityChest)
-//					teChest = (TileEntityChest) te;
-//				else
-//					instance().getLogger().error("Lost chest tile entity!");
-//				
-//				teChest.readFromNBT(chestTag);
-//				chestTag = new NBTTagCompound();
-//				teChest.writeToNBT(chestTag);
-//				
-//				if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
-//					if (true) //TODO: Replace with a debug config option.
-//						instance().getLogger().info("Lock made successfully");
-//				} else if (true) //TODO: Replace with a debug config option.
-//					instance().getLogger().warn("Lock made failed.");
-//				
-//				return true;
-						
+				// NBTTagCompound chestTag = new NBTTagCompound();
+				// teChest.writeToNBT(chestTag);
+				//
+				// NBTTagCompound lockTag = new NBTTagCompound();
+				//
+				// if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
+				// MessageUtil.sendMessage(player, "Already locked.");
+				// return true;
+				// }
+				//
+				//
+				//
+				// lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_ID, id);
+				// lockTag.setString(COMPOUND_TAG_ID_CHEST_LOCK_OWNER,
+				// player.getUniqueID().toString());
+				//
+				// chestTag.setTag(COMPOUND_TAG_ID_CHEST_LOCK, lockTag);
+				//
+				// te = world.getTileEntity(x, y, z);
+				// if (te instanceof TileEntityChest)
+				// teChest = (TileEntityChest) te;
+				// else
+				// instance().getLogger().error("Lost chest tile entity!");
+				//
+				// teChest.readFromNBT(chestTag);
+				// chestTag = new NBTTagCompound();
+				// teChest.writeToNBT(chestTag);
+				//
+				// if (chestTag.hasKey(COMPOUND_TAG_ID_CHEST_LOCK)) {
+				// if (true) //TODO: Replace with a debug config option.
+				// instance().getLogger().info("Lock made successfully");
+				// } else if (true) //TODO: Replace with a debug config option.
+				// instance().getLogger().warn("Lock made failed.");
+				//
+				// return true;
+
 			} else {
 				MessageUtil.sendMessage(player, "Already locked");
 			}
 			return true; // Prevent's use from what I tested.
 		}
 		return false;
-	}
-	
-	//Purely a helper function for less typing for now. Maybe will keep it.
-	private SecureItMod instance() {
-		return SecureItMod.instance;
 	}
 
 }

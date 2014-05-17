@@ -24,8 +24,8 @@ public class KeyItem extends Item {
 	}
 
 	@Override
-	public boolean isDamageable() {
-		return false;
+	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
+		return 0;
 	}
 
 	@Override
@@ -34,8 +34,8 @@ public class KeyItem extends Item {
 	}
 
 	@Override
-	public float getDigSpeed(ItemStack itemstack, Block block, int metadata) {
-		return 0;
+	public boolean isDamageable() {
+		return false;
 	}
 
 	@Override
