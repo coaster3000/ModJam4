@@ -58,7 +58,7 @@ public class KeyItem extends Item {
 			if (SecureItMod.instance.isKey(player.worldObj, x, y, z, getKey(stack))) {
 				SecureItMod.instance.unlock(player.worldObj, x, y, z);
 				if (stack.stackSize == 1) //Should never have more than one key of same id anyways.
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1));
+					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1).copy());
 				else {
 					stack.stackSize--;
 					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
