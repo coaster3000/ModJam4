@@ -35,7 +35,6 @@ public class KeyItem extends Item {
 	}
 	
 	
-	
 	public static Integer getKey(ItemStack stack) {
 		if (!stack.getItem().getClass().equals(KeyItem.class))
 			return null;
@@ -47,28 +46,29 @@ public class KeyItem extends Item {
 	
 	@Override
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		return true;
+		return super.onItemUseFirst(stack, player, world, x, y, z, side, hitX, hitY, hitZ);
 	}
 	
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z,
 			EntityPlayer player) {
-		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem,1);
-		if (SecureItMod.instance.isLocked(player.worldObj, y, z, z))
-			if (SecureItMod.instance.isKey(player.worldObj, x, y, z, getKey(stack))) {
-				SecureItMod.instance.unlock(player.worldObj, x, y, z);
-				if (stack.stackSize == 1) //Should never have more than one key of same id anyways.
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1).copy());
-				else {
-					stack.stackSize--;
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
-					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
-						player.dropItem(SecureItMod.lockAndKeyItem, 1);
-				}
-				MessageUtil.sendMessage(player, "Unlocked chest.");
-			}
-		player.inventory.markDirty();
-		
+//		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
+//		if (SecureItMod.instance.isLocked(player.worldObj, y, z, z))
+//			if (SecureItMod.instance.isKey(player.worldObj, x, y, z, getKey(stack))) {
+//				SecureItMod.instance.unlock(player.worldObj, x, y, z);
+//				if (stack.stackSize == 1) //Should never have more than one key of same id anyways.
+//					player.inventory.setInventorySlotContents(player.inventory.currentItem, new ItemStack(SecureItMod.lockAndKeyItem,1).copy());
+//				else {
+//					stack.stackSize--;
+//					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+//					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
+//						player.dropItem(SecureItMod.lockAndKeyItem, 1);
+//				}
+//				MessageUtil.sendMessage(player, "Unlocked chest.");
+//			}
+//		player.inventory.markDirty();
+//		
+//		return true;
 		return true;
 	}
 	
