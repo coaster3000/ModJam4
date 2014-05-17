@@ -156,33 +156,4 @@ public class SecureItMod {
 			getLogger().error("Failed to generate a id for lock.");
 		return id;
 	}
-	
-	@SubscribeEvent
-	public void onChestAccess(PlayerInteractEvent event) {
-		final int x = event.x, y = event.y, z = event.z;
-		World world = event.entity.worldObj;
-		
-		EntityPlayer player = event.entityPlayer;
-		
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof ProtectedTileEntityChest)
-		{
-			Item i;
-			if (player.getCurrentEquippedItem() == null)
-				i = null;
-			else
-				i = player.getCurrentEquippedItem().getItem();
-			
-			
-			if (i == null || !i.equals(keyItem)) {
-				event.setCanceled(true);
-				MessageUtil.sendMessage(player, "You need a key for this lock!");
-				return;
-			}
-			
-			ProtectedTileEntityChest cte = (ProtectedTileEntityChest) te;
-			MessageUtil.sendMessage(player, "OK");
-		}
-			
-	}
 }

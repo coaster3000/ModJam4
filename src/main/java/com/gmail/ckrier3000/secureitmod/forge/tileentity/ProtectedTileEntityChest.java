@@ -3,8 +3,11 @@ package com.gmail.ckrier3000.secureitmod.forge.tileentity;
 import java.util.UUID;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
@@ -25,10 +28,27 @@ public class ProtectedTileEntityChest extends TileEntityChest {
 		this.worldObj = chest.getWorldObj();
 		blockType = chest.blockType;
 		blockMetadata = chest.getBlockMetadata();
-		lidAngle = chest.lidAngle;
-		prevLidAngle = chest.prevLidAngle;
 		for (int i = 0; i < chest.getSizeInventory(); i++)
 			setInventorySlotContents(i, chest.getStackInSlot(i));
+		
+	}
+	
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		
+		Item i;
+		if (player.getCurrentEquippedItem() == null)
+			i = null;
+		else
+			i = player.getCurrentEquippedItem().getItem();
+		
+		
+		if (i == null || !i.equals(SecureItMod.keyItem)) {
+			return false;
+		}
+		
+		
+		return true;
 	}
 	
 	public void setLock(String lock) {
