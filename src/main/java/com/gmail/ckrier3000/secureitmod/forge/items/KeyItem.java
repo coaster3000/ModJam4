@@ -22,7 +22,6 @@ public class KeyItem extends Item implements InteractProxy {
 	public KeyItem() {
 		setUnlocalizedName("key");
 		setMaxStackSize(1);
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override

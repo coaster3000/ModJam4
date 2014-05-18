@@ -35,7 +35,6 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 		setCreativeTab(CreativeTabs.tabTools);
 		setUnlocalizedName("lockAndKey");
 		setMaxStackSize(64);
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	private boolean useFlag = false;
@@ -91,9 +90,10 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 					
 					stack.stackSize--;
 					data.player.inventory.setItemStack(stack.copy());
+					
+					data.player.inventory.markDirty();
+					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
 				}
-				data.player.inventory.markDirty();
-				playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
 				data.cancelEvent = true;
 				return;
 			}

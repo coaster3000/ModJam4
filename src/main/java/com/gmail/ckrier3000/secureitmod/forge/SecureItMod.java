@@ -128,7 +128,6 @@ public class SecureItMod {
 		debugListener = new DebugToolListener();
 		interactListener = new InteractListener();
 		
-		
 		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
 		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:SkeletonKey");

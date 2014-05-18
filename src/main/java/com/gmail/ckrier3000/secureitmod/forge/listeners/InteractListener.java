@@ -48,36 +48,39 @@ public class InteractListener extends BaseListener {
 		World world = event.entityPlayer.worldObj;
 		Block block = world.getBlock(x, y, z);
 		
+		
 		EntityPlayer player = event.entityPlayer;
 		final boolean isServer = !world.isRemote;
 		
-		if (!isServer)
-			return;
 		//Our needed specifics.
 		InteractData data = new InteractData(event);
-		if (block instanceof BlockChest)
-			if (isLocked(world, x, y, z))
-				if ((player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass()))) { 
+		if (!(block instanceof BlockChest))
+			return;
+			
+		if (isLocked(world, x, y, z)) {
+			if ((player.getCurrentEquippedItem() == null)) 
+				if (!isAnyMatch(player.getCurrentEquippedItem().getItem().getClass())) { 
+				
 					event.setCanceled(true);
 					event.useBlock = Result.DENY;
 					
 					MessageUtil.sendMessage(player, "Chest is locked!");
-				} else if (player.getCurrentEquippedItem() != null) {
-					if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy)
-						((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
 				} else {
 					event.setCanceled(true);
 					event.useBlock = Result.DENY;
 					
 					MessageUtil.sendMessage(player, "Chest is locked!");
 				}
+		} else if (player.getCurrentEquippedItem() != null) {
+			if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy) {
+				((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
 				
-		
-		
-		
-		event.setCanceled(data.cancelEvent);
-		event.useBlock = data.useBlock;
-		event.useItem = data.useItem;
+				event.setCanceled(data.cancelEvent);
+				event.useBlock = data.useBlock;
+				event.useItem = data.useItem;
+				
+			} else event.setCanceled(isLocked(world, x, y, z));
+		}
 	}
 	
 	private boolean hasInterface(Class c, Class i) {
