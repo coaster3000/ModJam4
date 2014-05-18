@@ -161,7 +161,8 @@ public class SecureItMod {
 	public Integer lock(World world, int x, int y, int z, String owner, int key) {
 		if (key == -1)
 			key = getNewLockID(world);
-
+		
+		log.info(key);
 		String id = getLocString(x, y, z);
 		NBTTagCompound t = new NBTTagCompound();
 		
@@ -181,7 +182,7 @@ public class SecureItMod {
 	}
 
 	public Integer lock(World world, int x, int y, int z, UUID owner) {
-		return lock(world, x, y, z, (owner!= null) ? owner.toString() : null, -1);
+		return lock(world, x, y, z, (owner!= null) ? owner.toString() : null, getNewLockID(world));
 	}
 	
 	public Integer lock(World world, int x, int y, int z, UUID owner, int key) {

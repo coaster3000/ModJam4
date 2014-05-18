@@ -64,8 +64,6 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 
 	public void interactProxy(InteractData data) {
 		
-		instance().getLogger().info(data.isServer);
-		
 		if (!data.isServer)
 			return;
 		
@@ -75,11 +73,7 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 				if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z))
 					MessageUtil.sendMessage(data.player, "Cannot lock already locked chest!");
 				else {
-					int lock = -1;
-					if (data.isServer)
-						lock = SecureItMod.instance.lock(data.world, data.x, data.y, data.z, data.player.getUniqueID(), SecureItMod.instance.getLastID(data.world));
-					else
-						lock = SecureItMod.instance.getNewLockID(data.world);
+					int	lock = SecureItMod.instance.lock(data.world, data.x, data.y, data.z, data.player.getUniqueID());
 					
 					ItemStack key = new ItemStack(SecureItMod.keyItem, 1);
 					
