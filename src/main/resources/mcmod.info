@@ -4,14 +4,9 @@
 "name": "Secure it Mod",
 "description": "Simple Lock and Key Mod.",
 "version": "${version}",
-"credits": "",
-"logoFile": "",
+"credits": "Special thanks to the modjam team for the support!",
 "mcversion": "${mcversion}",
-"url": "",
-"updateUrl": "",
 "authors": [coaster3000],
-"parent":"",
-"screenshots": [],
 "dependencies": [
          "mod_MinecraftForge"
 ]
