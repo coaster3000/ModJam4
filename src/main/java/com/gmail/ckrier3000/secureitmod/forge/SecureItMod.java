@@ -211,15 +211,18 @@ public class SecureItMod {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		World w = event.world;
+		WorldSavedData d = w.mapStorage.loadData(WorldSavedData.class, "SecureItModData");
+		
 		int id = w.provider.dimensionId;
-
-		// XXX: Not really loading for some dumb reason...
+		log.info(!w.isRemote);
 		
 		NBTTagCompound data = new NBTTagCompound();
-		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
-			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
-		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
-			lockDataLists.put(id, w.getWorldInfo().getNBTTagCompound().getCompoundTag(WORLDINFO_LOCKS));
+		d.writeToNBT(data);
+		
+		if (data.hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
+			usedLockLists.put(id, data.getInteger(WORLDINFO_USEDLOCKS));
+		if (data.hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
+			lockDataLists.put(id, data.getCompoundTag(WORLDINFO_LOCKS));
 	}
 
 	@SubscribeEvent
@@ -242,7 +245,7 @@ public class SecureItMod {
 		if (lockDataLists.containsKey(id))
 			data.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
 		
-		
+		d.readFromNBT(data);
 	}
 
 	@EventHandler
