@@ -2,24 +2,17 @@ package com.gmail.ckrier3000.secureitmod.forge.items;
 
 import java.util.List;
 
-import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
-import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
+import com.gmail.ckrier3000.secureitmod.forge.InteractData;
+import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 public class KeyItem extends Item {
 	public static final String COMPOUND_TAG_KEY_CREATOR = "maker";
@@ -49,32 +42,36 @@ public class KeyItem extends Item {
 		return null;
 	}
 	
-	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
+	public void interactProxy(InteractData data) {
 		
-		if (SecureItMod.instance.isLocked(world, x, y, z)) {
-			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
-				if (player.isSneaking()) {
-					SecureItMod.instance.unlock(world, x, y, z);
-					
-					stack.stackSize--;
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
-					
-					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
-						player.dropItem(SecureItMod.lockAndKeyItem, 1);
-					
-					MessageUtil.sendMessage(player, "Unlocked chest.");
-					player.inventory.markDirty();
-				}
-				return false;
-			} else {
-				MessageUtil.sendMessage(player, "Wrong key");
-			}
-		}
-		
-		return true;
 	}
+	
+//	@Override
+//	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+//		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
+//		
+//		if (SecureItMod.instance.isLocked(world, x, y, z)) {
+//			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
+//				if (player.isSneaking()) {
+//					SecureItMod.instance.unlock(world, x, y, z);
+//					
+//					stack.stackSize--;
+//					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+//					
+//					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
+//						player.dropItem(SecureItMod.lockAndKeyItem, 1);
+//					
+//					MessageUtil.sendMessage(player, "Unlocked chest.");
+//					player.inventory.markDirty();
+//				}
+//				return false;
+//			} else {
+//				MessageUtil.sendMessage(player, "Wrong key");
+//			}
+//		}
+//		
+//		return true;
+//	}
 	
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z,
