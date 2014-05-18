@@ -1,13 +1,10 @@
-[
 {
-"modid": "cSecureItMod",
-"name": "Secure it Mod",
-"description": "Simple Lock and Key Mod.",
-"version": "${version}",
-"credits": "Special thanks to the modjam team for the support!",
-"mcversion": "${mcversion}",
-"authors": [coaster3000],
-"dependencies": [
-         "mod_MinecraftForge"
-]
+    "modid": "cSecureItMod",
+    "name": "Secure it Mod",
+    "description": "Simple Lock and Key Mod.",
+    "version": "${version}",
+    "credits": "Special thanks to the modjam team for the support!",
+    "mcversion": "${mcversion}",
+    "authors": [coaster3000],
+    "dependencies": ["mod_MinecraftForge"]
 }
