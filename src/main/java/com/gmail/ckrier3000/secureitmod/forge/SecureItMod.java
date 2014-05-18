@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,13 +43,13 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = "cSecureItMod", version = "1.7.2-1.0", name = "Secure It Mod")
+@Mod(modid = "secureitmod", version = "1.7.2-1.0", name = "Secure It Mod")
 public class SecureItMod {
 
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 
-	@Instance(value = "cSecureItMod")
+	@Instance(value = "secureitmod")
 	public static SecureItMod instance;
 
 	public static boolean isServer;
@@ -102,8 +103,8 @@ public class SecureItMod {
 	}
 
 	private NBTTagCompound getLocks(World world) {
-		System.out.println(world.provider.dimensionId + "dim unlock");
-		System.out.println(world.isRemote + "dim unlock remote");
+//		System.out.println(world.provider.dimensionId + "dim unlock");
+//		System.out.println(world.isRemote + "dim unlock remote");
 		return getLocks(world.provider.dimensionId);
 	}
 
@@ -144,7 +145,7 @@ public class SecureItMod {
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-		System.out.println(world.provider.dimensionId + "");
+//		System.out.println(world.provider.dimensionId + "");
 		return getLocks(world).hasKey(id);
 	}
 
@@ -206,7 +207,6 @@ public class SecureItMod {
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
 		debugListener = new DebugToolListener();
-		
 		MinecraftForge.EVENT_BUS.register(this);
 		MinecraftForge.EVENT_BUS.register(debugListener);
 	}
@@ -242,7 +242,6 @@ public class SecureItMod {
 		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
 		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:forceUnlock");
-		
 
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
