@@ -30,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
 import com.gmail.ckrier3000.secureitmod.forge.listeners.DebugToolListener;
+import com.gmail.ckrier3000.secureitmod.forge.listeners.InteractListener;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.Mod;
@@ -70,7 +71,8 @@ public class SecureItMod {
 	private File modConfigurationDirectory, suggestedConfig;
 	private Map<Integer, Integer> usedLockLists;
 	private DebugToolListener debugListener;
-
+	private InteractListener interactListener;
+	
 	public Integer getLastID(int did) {
 		if (!usedLockLists.containsKey(did)) {
 			usedLockLists.put(did, 0);
@@ -123,6 +125,9 @@ public class SecureItMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		debugListener = new DebugToolListener();
+		interactListener = new InteractListener();
+		
 		
 	}
 
@@ -181,29 +186,11 @@ public class SecureItMod {
 		}
 	}
 
-	@SubscribeEvent
-	public void onChestAccess(PlayerInteractEvent event) {
-		final int x = event.x, y = event.y, z = event.z;
-		World world = event.entity.worldObj;
-		EntityPlayer player = event.entityPlayer;
-		Block b = world.getBlock(x, y, z);
-		if (b instanceof BlockChest)
-			if (isLocked(world, x, y, z)) {
-				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())) {
-					event.setCanceled(true);
-					
-					MessageUtil.sendMessage(player, "Chest is locked!");
-				} else
-					return;
-
-			}
-	}
 
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
-		debugListener = new DebugToolListener();
+		
 		MinecraftForge.EVENT_BUS.register(this);
-		MinecraftForge.EVENT_BUS.register(debugListener);
 	}
 
 	@SubscribeEvent

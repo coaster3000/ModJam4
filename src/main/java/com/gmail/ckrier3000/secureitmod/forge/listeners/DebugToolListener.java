@@ -7,6 +7,7 @@ import org.apache.logging.log4j.message.Message;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
@@ -32,8 +33,6 @@ public class DebugToolListener extends BaseListener {
 		final boolean isServer = !world.isRemote;
 		final Action action = event.action;
 		
-		log.info(isServer);
-		log.info(action);
 	}
 	
 	
