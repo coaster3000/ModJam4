@@ -75,7 +75,8 @@ public class InteractListener extends BaseListener {
 					event.setCanceled(data.cancelEvent);
 					event.useBlock = data.useBlock;
 					event.useItem = data.useItem;
-					
+//					if (event.isCanceled())
+//						MessageUtil.sendMessage(player, "Chest is locked!");
 				} else event.setCanceled(isLocked(world, x, y, z));
 			}
 		} else if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof InteractProxy) {

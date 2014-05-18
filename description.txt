@@ -1,0 +1,3 @@
+Secure It Mod is a mod meant to protect your chest's from anyone without a proper key to the chest.
+The mod is meant to run with additions of content to the game excluding rendering.
+Chests are locked and are still vanilla blocks.

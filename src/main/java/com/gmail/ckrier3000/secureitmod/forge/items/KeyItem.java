@@ -30,16 +30,16 @@ public class KeyItem extends Item implements InteractProxy {
 	}
 	
 	
-	public static Integer getKey(ItemStack stack) {
+	public static int getKey(ItemStack stack) {
 		if (stack == null)
-			return null;
+			return 0;
 		
 		if (!stack.getItem().getClass().equals(KeyItem.class))
-			return null;
+			return 0;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
-		return null;
+		return 0;
 	}
 	
 	public void interactProxy(InteractData data) {
@@ -70,6 +70,7 @@ public class KeyItem extends Item implements InteractProxy {
 				return;
 			} else {
 				MessageUtil.sendMessage(data.player, "Wrong key");
+				data.cancelEvent = true;
 			}
 		}
 		
@@ -89,7 +90,7 @@ public class KeyItem extends Item implements InteractProxy {
 	
 	@Override
 	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != null?" ("+getKey(par1ItemStack) + ")":"");
+		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != 0?" ("+getKey(par1ItemStack) + ")":"");
 	}
 	
 	@Override

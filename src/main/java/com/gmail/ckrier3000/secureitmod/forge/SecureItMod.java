@@ -75,8 +75,8 @@ public class SecureItMod {
 	
 	public Integer getLastID(int did) {
 		if (!usedLockLists.containsKey(did)) {
-			usedLockLists.put(did, 0);
-			return 0;
+			usedLockLists.put(did, 1);
+			return 1;
 		}
 		return usedLockLists.get(did);
 	}
@@ -138,17 +138,17 @@ public class SecureItMod {
 		
 	}
 
-	public boolean isKey(World world, int x, int y, int z, Integer key) {
+	public boolean isKey(World world, int x, int y, int z, int key) {
 		if (!isLocked(world, x, y, z))
 			return true;
 		
-		if (key == null)
+		if (key == 0)
 			return false; 
 
 		if (getLocks(world).getCompoundTag(getLocString(x, y, z)).hasKey(COMPOUND_TAG_ID_CHEST_LOCK_ID))
 			return getLocks(world).getCompoundTag(getLocString(x, y, z)).getInteger(COMPOUND_TAG_ID_CHEST_LOCK_ID) == key;
 		else
-			return true;
+			return false;
 	}
 
 	public boolean isLocked(World world, int x, int y, int z) {
