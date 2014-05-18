@@ -58,9 +58,9 @@ public class KeyItem extends Item implements InteractProxy {
 					SecureItMod.instance.unlock(data.world, data.x, data.y, data.z);
 					
 					stack.stackSize--;
-					data.player.inventory.setInventorySlotContents(data.player.inventory.currentItem, stack.copy());
+					data.player.inventory.setInventorySlotContents(data.player.inventory.currentItem, stack);
 					
-					if (!data.player.inventory.addItemStackToInventory(lockKey.copy()))
+					if (!data.player.inventory.addItemStackToInventory(lockKey))
 						data.player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					
 					MessageUtil.sendMessage(data.player, "Unlocked chest.");
