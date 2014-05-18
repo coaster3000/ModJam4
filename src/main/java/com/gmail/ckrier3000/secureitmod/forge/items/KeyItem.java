@@ -29,7 +29,6 @@ public class KeyItem extends Item implements InteractProxy {
 		return false;
 	}
 	
-	
 	public static int getKey(ItemStack stack) {
 		if (stack == null)
 			return 0;
@@ -65,7 +64,9 @@ public class KeyItem extends Item implements InteractProxy {
 					
 					MessageUtil.sendMessage(data.player, "Unlocked chest.");
 					data.player.inventory.markDirty();
-					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
+					
+//					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
+					data.player.inventoryContainer.detectAndSendChanges();
 				}
 				return;
 			} else {

@@ -95,6 +95,7 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 					data.player.inventory.setInventorySlotContents(data.player.inventory.currentItem, stack);
 					
 					data.player.inventory.markDirty();
+					data.player.inventoryContainer.detectAndSendChanges();
 				}
 				data.cancelEvent = true;
 				return;
