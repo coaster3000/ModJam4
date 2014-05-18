@@ -64,6 +64,30 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 
 	public void interactProxy(InteractData data) {
 		
+		if (data.player.isSneaking())
+			if (data.block instanceof BlockChest) {
+				if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z))
+					MessageUtil.sendMessage(data.player, "Cannot lock already locked chest!");
+				else {
+					int lock = SecureItMod.instance.lock(data.world, data.x, data.y, data.z, data.player.getUniqueID());
+					ItemStack key = new ItemStack(SecureItMod.keyItem);
+					
+					key.stackTagCompound = new NBTTagCompound();
+					
+					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
+					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, data.player.getDisplayName());
+					
+					if (!data.player.inventory.addItemStackToInventory(key.copy()))
+						data.player.entityDropItem(key, 1);
+					
+					stack.stackSize--;
+					data.player.inventory.setItemStack(stack.copy());
+				}
+				data.player.inventory.markDirty();
+				data.cancelEvent = true;
+				return;
+			}
+		data.cancelEvent =  SecureItMod.instance.isLocked(world, x, y, z);
 	}
 	
 //	@Override
@@ -71,7 +95,7 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 //			ItemStack stack, // Non interactive blocks.
 //			EntityPlayer player, World world, int x, int y, int z, int side,
 //			float hitX, float hitY, float hitZ) {
-//
+
 //		return true;
 //	}
 //
@@ -81,29 +105,6 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 //			World world, int x, int y, int z, int side, float hitX, float hitY,
 //			float hitZ) {
 //		
-//		if (player.isSneaking())
-//			if (world.getBlock(x, y, z) instanceof BlockChest) {
-//				if (SecureItMod.instance.isLocked(world, x, y, z))
-//					MessageUtil.sendMessage(player, "Cannot lock already locked chest!");
-//				else {
-//					int lock = SecureItMod.instance.lock(world, x, y, z, player.getUniqueID());
-//					ItemStack key = new ItemStack(SecureItMod.keyItem);
-//					
-//					key.stackTagCompound = new NBTTagCompound();
-//					
-//					key.stackTagCompound.setInteger(KeyItem.COMPOUND_TAG_KEY_ID, lock);
-//					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, player.getDisplayName());
-//				
-//					if (!player.inventory.addItemStackToInventory(key.copy()))
-//						player.entityDropItem(key, 1);
-//					
-//					stack.stackSize--;
-//					player.inventory.setItemStack(stack.copy());
-//				}
-//				player.inventory.markDirty();
-//				return true; // Prevent's use from what I tested.
-//			}
-//		return SecureItMod.instance.isLocked(world, x, y, z);
 //	}
 
 	@Override

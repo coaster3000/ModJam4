@@ -43,32 +43,37 @@ public class KeyItem extends Item implements InteractProxy {
 	}
 	
 	public void interactProxy(InteractData data) {
+		if (!data.isServer || !data.isServerPlayer)
+			return;
+		
+		ItemStack stack = data.player.getCurrentEquippedItem();
+		
+		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
+		
+		if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z)) {
+			if (SecureItMod.instance.isKey(data.world, data.x, data.y, data.z, getKey(stack))) {
+				if (data.player.isSneaking()) {
+					SecureItMod.instance.unlock(data.world, data.x, data.y, data.z);
+					
+					stack.stackSize--;
+					data.player.inventory.setInventorySlotContents(data.player.inventory.currentItem, stack.copy());
+					
+					if (!data.player.inventory.addItemStackToInventory(lockKey.copy()))
+						data.player.dropItem(SecureItMod.lockAndKeyItem, 1);
+					
+					MessageUtil.sendMessage(data.player, "Unlocked chest.");
+					data.player.inventory.markDirty();
+				}
+				return;
+			} else {
+				MessageUtil.sendMessage(data.player, "Wrong key");
+			}
+		}
 		
 	}
 	
 //	@Override
 //	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-//		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
-//		
-//		if (SecureItMod.instance.isLocked(world, x, y, z)) {
-//			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
-//				if (player.isSneaking()) {
-//					SecureItMod.instance.unlock(world, x, y, z);
-//					
-//					stack.stackSize--;
-//					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
-//					
-//					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
-//						player.dropItem(SecureItMod.lockAndKeyItem, 1);
-//					
-//					MessageUtil.sendMessage(player, "Unlocked chest.");
-//					player.inventory.markDirty();
-//				}
-//				return false;
-//			} else {
-//				MessageUtil.sendMessage(player, "Wrong key");
-//			}
-//		}
 //		
 //		return true;
 //	}

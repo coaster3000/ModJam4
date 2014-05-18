@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.forge.items.ForceUnlockToolItem;
+import com.gmail.ckrier3000.secureitmod.forge.items.InteractProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
@@ -58,16 +59,23 @@ public class InteractListener extends BaseListener {
 			return;
 		
 		if (isLocked(world, x, y, z)) {
-			Class<?> c = player.getCurrentEquippedItem().getItem().getClass();
-			if (player.getCurrentEquippedItem() == null || !isAnyMatch(c)) {
+			if (player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass())) {
 				event.setCanceled(true);
 				
 				MessageUtil.sendMessage(player, "Chest is locked!");
-			} 
-			if (c.equals(SecureItMod.keyItem))
-				((KeyItem)SecureItMod.keyItem).interactProxy(data);
+			} else {
+				if (hasInterface(player.getCurrentEquippedItem().getItem().getClass(), InteractProxy.class))
+					((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
+			}
 		}
 	
+	}
+	
+	private boolean hasInterface(Class c, Class i) {
+		for (Class ci : c.getInterfaces())
+			if (ci.equals(i))
+				return true;
+		return false;
 	}
 	
 	private boolean isAnyMatch(Class<?> c) {
