@@ -70,6 +70,7 @@ public class SecureItMod {
 
 	private File modConfigurationDirectory, suggestedConfig;
 	private Map<Integer, Integer> usedLockLists;
+	private DebugToolListener debugListener;
 
 	public Integer getLastID(int did) {
 		if (!usedLockLists.containsKey(did)) {
@@ -204,9 +205,10 @@ public class SecureItMod {
 
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
 		debugListener = new DebugToolListener();
+		
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(debugListener);
 	}
 
 	@SubscribeEvent
@@ -252,6 +254,7 @@ public class SecureItMod {
 		isServer = event.getSide().isServer();
 		modConfigurationDirectory = event.getModConfigurationDirectory();
 		log = event.getModLog();
+		
 		suggestedConfig = event.getSuggestedConfigurationFile();
 		usedLockLists = new HashMap<Integer, Integer>();
 		lockDataLists = new HashMap<Integer, NBTTagCompound>();
