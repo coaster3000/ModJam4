@@ -1,0 +1,3 @@
+1. Inventory does not update and show new items.
+
+
