@@ -48,8 +48,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @Mod(modid = "secureitmod", version = "1.7.2-1.0", name = "Secure It Mod")
 public class SecureItMod {
 
-	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
-	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 
 	@Instance(value = "secureitmod")
 	public static SecureItMod instance;
@@ -63,14 +61,17 @@ public class SecureItMod {
 	@SidedProxy(serverSide = "com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy", clientSide = "com.gmail.ckrier3000.secureitmod.forge.common.ClientProxy")
 	public static CommonProxy proxy;
 	
+	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
+	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
 	public static final String WORLDINFO_LOCKS = "SILocks";
 	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
 
-	private Map<Integer, NBTTagCompound> lockDataLists;
+	Map<Integer, Integer> usedLockLists;
+	Map<Integer, NBTTagCompound> lockDataLists;
+	
 	private Logger log;
 
 	private File modConfigurationDirectory, suggestedConfig;
-	private Map<Integer, Integer> usedLockLists;
 	private DebugToolListener debugListener;
 	private InteractListener interactListener;
 	
@@ -211,7 +212,7 @@ public class SecureItMod {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		World w = event.world;
-		WorldSavedData d = w.mapStorage.loadData(WorldSavedData.class, "SecureItModData");
+		WorldSavedData d = w.mapStorage.loadData(SecureItSaveData.class, SecureItSaveData.NAME);
 		
 		int id = w.provider.dimensionId;
 		log.info(!w.isRemote);
