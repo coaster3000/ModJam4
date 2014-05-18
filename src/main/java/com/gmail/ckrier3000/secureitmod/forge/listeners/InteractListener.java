@@ -1,8 +1,14 @@
 package com.gmail.ckrier3000.secureitmod.forge.listeners;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.forge.items.ForceUnlockToolItem;
+import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
+import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
@@ -27,20 +33,6 @@ public class InteractListener extends BaseListener {
 	// OLD CODE
 //	@SubscribeEvent
 //	public void onChestAccess(PlayerInteractEvent event) {
-//		final int x = event.x, y = event.y, z = event.z;
-//		World world = event.entity.worldObj;
-//		EntityPlayer player = event.entityPlayer;
-//		Block b = world.getBlock(x, y, z);
-//		if (b instanceof BlockChest)
-//			if (isLocked(world, x, y, z)) {
-//				if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(keyItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(forceUnlockItem.getClass()) && !player.getCurrentEquippedItem().getItem().getClass().equals(lockAndKeyItem.getClass())) {
-//					event.setCanceled(true);
-//					
-//					MessageUtil.sendMessage(player, "Chest is locked!");
-//				} else
-//					return;
-//
-//			}
 //	}
 	
 	@SubscribeEvent
@@ -51,17 +43,65 @@ public class InteractListener extends BaseListener {
 		World world = event.entityPlayer.worldObj;
 		Block block = world.getBlock(x, y, z);
 		Logger log = instance.getLogger();
+		EntityPlayer player = event.entityPlayer;
 		//Our needed specifics.
 		final boolean isServer = !world.isRemote;
 		final boolean isChest = block instanceof BlockChest;
+		final boolean isServerPlayer = player instanceof EntityPlayerMP;
 		
-		if (!isServer) //Kill none server.
+		if (!isServer || !isChest || !isServerPlayer) //skips
 			return;
 		
-		EntityPlayer player = event.entityPlayer;
-		log.info(player instanceof EntityPlayerMP);
-		log.info(player instanceof EntityPlayerSP);
+		if (isLocked(world, x, y, z)) {
+			if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(KeyItem.class) && !player.getCurrentEquippedItem().getItem().getClass().equals(ForceUnlockToolItem.class) && !player.getCurrentEquippedItem().getItem().getClass().equals(LockAndKeyItem.class)) {
+				event.setCanceled(true);
+				
+				MessageUtil.sendMessage(player, "Chest is locked!");
+			} else
+				return;
+		}
+	
 	}
+
+	private Integer getLastID(int did) {
+		return instance.getLastID(did);
+	}
+
+
+	private Integer getLastID(World world) {
+		return instance.getLastID(world);
+	}
+
+
+	private Integer getLockID(World world, int x, int y, int z) {
+		return instance.getLockID(world, x, y, z);
+	}
+
+
+	private boolean isKey(World world, int x, int y, int z, Integer key) {
+		return instance.isKey(world, x, y, z, key);
+	}
+
+
+	private boolean isLocked(World world, int x, int y, int z) {
+		return instance.isLocked(world, x, y, z);
+	}
+
+
+	private Integer lock(World world, int x, int y, int z, String owner) {
+		return instance.lock(world, x, y, z, owner);
+	}
+
+
+	private Integer lock(World world, int x, int y, int z, UUID owner) {
+		return instance.lock(world, x, y, z, owner);
+	}
+
+
+	private void unlock(World world, int x, int y, int z) {
+		instance.unlock(world, x, y, z);
+	}
+
 
 	@Override
 	public boolean onRegister() {

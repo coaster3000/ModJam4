@@ -129,6 +129,14 @@ public class SecureItMod {
 		interactListener = new InteractListener();
 		
 		
+		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
+		keyItem = new KeyItem().setTextureName("secureitmod:key");
+		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:forceUnlock");
+
+		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
+		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
+		GameRegistry.registerItem(forceUnlockItem, forceUnlockItem.getUnlocalizedName());
+		
 	}
 
 	public boolean isKey(World world, int x, int y, int z, Integer key) {
@@ -189,6 +197,8 @@ public class SecureItMod {
 
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
+		interactListener.register();
+		debugListener.register();
 		
 		MinecraftForge.EVENT_BUS.register(this);
 	}
@@ -221,13 +231,7 @@ public class SecureItMod {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
-		keyItem = new KeyItem().setTextureName("secureitmod:key");
-		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:forceUnlock");
-
-		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
-		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
-		GameRegistry.registerItem(forceUnlockItem, forceUnlockItem.getUnlocalizedName());
+		
 	}
 
 	@EventHandler
