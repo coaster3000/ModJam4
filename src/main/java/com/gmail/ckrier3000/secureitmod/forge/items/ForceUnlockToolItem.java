@@ -22,7 +22,6 @@ public class ForceUnlockToolItem extends Item {
 			SecureItMod.instance.unlock(world, x, y, z);
 			MessageUtil.sendMessage(player, "Unlocked!");
 		}
-		
 
 		return false;
 	}

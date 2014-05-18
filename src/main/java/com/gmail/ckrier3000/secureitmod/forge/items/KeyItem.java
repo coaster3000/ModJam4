@@ -14,7 +14,7 @@ import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
-public class KeyItem extends Item {
+public class KeyItem extends Item implements InteractProxy {
 	public static final String COMPOUND_TAG_KEY_CREATOR = "maker";
 	public static final String COMPOUND_TAG_KEY_ID = "keyID";
 	

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.Logger;
 
+import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.forge.items.ForceUnlockToolItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
@@ -24,9 +25,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 public class InteractListener extends BaseListener {
 	
 	private final SecureItMod instance; //Easy Access
+	private Logger log;
 	
 	public InteractListener() {
 		instance = SecureItMod.instance;
+		log = instance.getLogger();
 	}
 	
 
@@ -39,28 +42,36 @@ public class InteractListener extends BaseListener {
 	public void onInteract(PlayerInteractEvent event) {
 		//Setup some accessors.
 		final int x = event.x, y = event.y, z = event.z;
-		final Action action = event.action;
+//		final Action action = event.action;
 		World world = event.entityPlayer.worldObj;
 		Block block = world.getBlock(x, y, z);
-		Logger log = instance.getLogger();
+		
 		EntityPlayer player = event.entityPlayer;
 		//Our needed specifics.
 		final boolean isServer = !world.isRemote;
 		final boolean isChest = block instanceof BlockChest;
 		final boolean isServerPlayer = player instanceof EntityPlayerMP;
 		
+		InteractData data = new InteractData(event);
+		
 		if (!isServer || !isChest || !isServerPlayer) //skips
 			return;
 		
 		if (isLocked(world, x, y, z)) {
-			if (player.getCurrentEquippedItem() == null || !player.getCurrentEquippedItem().getItem().getClass().equals(KeyItem.class) && !player.getCurrentEquippedItem().getItem().getClass().equals(ForceUnlockToolItem.class) && !player.getCurrentEquippedItem().getItem().getClass().equals(LockAndKeyItem.class)) {
+			Class<?> c = player.getCurrentEquippedItem().getItem().getClass();
+			if (player.getCurrentEquippedItem() == null || !isAnyMatch(c)) {
 				event.setCanceled(true);
 				
 				MessageUtil.sendMessage(player, "Chest is locked!");
-			} else
-				return;
+			} 
+			if (c.equals(SecureItMod.keyItem))
+				((KeyItem)SecureItMod.keyItem).interactProxy(data);
 		}
 	
+	}
+	
+	private boolean isAnyMatch(Class<?> c) {
+		return c.equals(KeyItem.class) || c.equals(ForceUnlockToolItem.class) || c.equals(LockAndKeyItem.class);
 	}
 
 	private Integer getLastID(int did) {
