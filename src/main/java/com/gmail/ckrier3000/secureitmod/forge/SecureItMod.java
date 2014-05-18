@@ -130,7 +130,6 @@ public class SecureItMod {
 		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:LockAndKey");
 		keyItem = new KeyItem().setTextureName("secureitmod:Key");
 		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:SkeletonKey");
-
 		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
@@ -153,7 +152,39 @@ public class SecureItMod {
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-		return getLocks(world).hasKey(id);
+		
+		if (isAnyLocked(
+				new Location(world, x+1, y, z),
+				new Location(world, x-1, y, z),
+				new Location(world, x, y, z+1),
+				new Location(world, x, y, z-1)))
+			return true;
+		
+		return getLocks(world).hasKey(id) && world.getBlock(x, y, z) instanceof BlockChest;
+	}
+	
+	public static class Location {
+		public int x,y,z;
+		public World world;
+		
+		public Location(World world, int x,int y,int z) {
+			this.world = world;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+	}
+	
+	/* PREVENTS INFINITY LOOP */
+	private boolean _isLocked(World world, int x, int y, int z) {
+		String id = getLocString(x, y, z);
+		
+		return getLocks(world).hasKey(id) && world.getBlock(x, y, z) instanceof BlockChest;
+	}
+	
+	public boolean isAnyLocked(Location... locations) {
+		for (Location l : locations) if (_isLocked(l.world, l.x, l.y, l.z)) return true;
+		return false;
 	}
 
 	public Integer lock(World world, int x, int y, int z, String owner, int key) {
@@ -289,6 +320,10 @@ public class SecureItMod {
 		for (String item : list)
 			ret.appendTag(new NBTTagString(item));
 		return ret;
+	}
+	
+	private Location[] getAdjacentLocks(Location l) {
+		return new Location[0];
 	}
 
 	public void unlock(World world, int x, int y, int z) {
