@@ -56,15 +56,24 @@ public class InteractListener extends BaseListener {
 		//Our needed specifics.
 		InteractData data = new InteractData(event);
 		if (block instanceof BlockChest)
-			if (isLocked(world, x, y, z) && (player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass()))) {
-				event.setCanceled(true);
-				event.useBlock = Result.DENY;
+			if (isLocked(world, x, y, z))
+				if ((player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass()))) { 
+					event.setCanceled(true);
+					event.useBlock = Result.DENY;
+					
+					MessageUtil.sendMessage(player, "Chest is locked!");
+				} else if (player.getCurrentEquippedItem() != null) {
+					if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy)
+						((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
+				} else {
+					event.setCanceled(true);
+					event.useBlock = Result.DENY;
+					
+					MessageUtil.sendMessage(player, "Chest is locked!");
+				}
 				
-				MessageUtil.sendMessage(player, "Chest is locked!");
-			} else {
-				if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy)
-					((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
-			}
+		
+		
 		
 		event.setCanceled(data.cancelEvent);
 		event.useBlock = data.useBlock;

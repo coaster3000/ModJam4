@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,6 +51,8 @@ public class KeyItem extends Item implements InteractProxy {
 		
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
+		EntityPlayerMP playerS = ((EntityPlayerMP)data.player);
+		
 		if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z)) {
 			if (SecureItMod.instance.isKey(data.world, data.x, data.y, data.z, getKey(stack))) {
 				if (data.player.isSneaking()) {
@@ -63,6 +66,7 @@ public class KeyItem extends Item implements InteractProxy {
 					
 					MessageUtil.sendMessage(data.player, "Unlocked chest.");
 					data.player.inventory.markDirty();
+					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
 				}
 				return;
 			} else {
