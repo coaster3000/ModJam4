@@ -215,7 +215,6 @@ public class SecureItMod {
 		// XXX: Not really loading for some dumb reason...
 		
 		NBTTagCompound data = new NBTTagCompound();
-		
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
 			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
