@@ -2,33 +2,26 @@ package com.gmail.ckrier3000.secureitmod.forge.items;
 
 import java.util.List;
 
-import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
-import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
-
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockChest;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
-public class KeyItem extends Item {
+import com.gmail.ckrier3000.secureitmod.forge.InteractData;
+import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
+import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
+
+public class KeyItem extends Item implements InteractProxy {
 	public static final String COMPOUND_TAG_KEY_CREATOR = "maker";
 	public static final String COMPOUND_TAG_KEY_ID = "keyID";
 	
 	public KeyItem() {
 		setUnlocalizedName("key");
 		setMaxStackSize(1);
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -36,45 +29,59 @@ public class KeyItem extends Item {
 		return false;
 	}
 	
-	
-	public static Integer getKey(ItemStack stack) {
+	public static int getKey(ItemStack stack) {
 		if (stack == null)
-			return null;
+			return 0;
 		
 		if (!stack.getItem().getClass().equals(KeyItem.class))
-			return null;
+			return 0;
 		
 		if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey(COMPOUND_TAG_KEY_ID))
 			return stack.stackTagCompound.getInteger(COMPOUND_TAG_KEY_ID);
-		return null;
+		return 0;
 	}
 	
-	@Override
-	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+	public void interactProxy(InteractData data) {
+		if (!data.isServer || !data.isServerPlayer)
+			return;
+		
+		ItemStack stack = data.player.getCurrentEquippedItem();
+		
 		ItemStack lockKey = new ItemStack(SecureItMod.lockAndKeyItem ,1);
 		
-		if (SecureItMod.instance.isLocked(world, x, y, z)) {
-			if (SecureItMod.instance.isKey(world, x, y, z, getKey(stack))) {
-				if (player.isSneaking()) {
-					SecureItMod.instance.unlock(world, x, y, z);
+		EntityPlayerMP playerS = ((EntityPlayerMP)data.player);
+		
+		if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z)) {
+			if (SecureItMod.instance.isKey(data.world, data.x, data.y, data.z, getKey(stack))) {
+				if (data.player.isSneaking()) {
+					SecureItMod.instance.unlock(data.world, data.x, data.y, data.z);
 					
 					stack.stackSize--;
-					player.inventory.setInventorySlotContents(player.inventory.currentItem, stack.copy());
+					data.player.inventory.setInventorySlotContents(data.player.inventory.currentItem, stack);
 					
-					if (!player.inventory.addItemStackToInventory(lockKey.copy()))
-						player.dropItem(SecureItMod.lockAndKeyItem, 1);
+					if (!data.player.inventory.addItemStackToInventory(lockKey))
+						data.player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					
-					MessageUtil.sendMessage(player, "Unlocked chest.");
-					player.inventory.markDirty();
+					MessageUtil.sendMessage(data.player, "Unlocked chest.");
+					data.player.inventory.markDirty();
+					
+//					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
+					data.player.inventoryContainer.detectAndSendChanges();
 				}
-				return false;
+				return;
 			} else {
-				MessageUtil.sendMessage(player, "Wrong key");
+				MessageUtil.sendMessage(data.player, "Wrong key");
+				data.cancelEvent = true;
 			}
 		}
 		
-		return true;
 	}
+	
+//	@Override
+//	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+//		
+//		return true;
+//	}
 	
 	@Override
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z,
@@ -84,7 +91,7 @@ public class KeyItem extends Item {
 	
 	@Override
 	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != null?" ("+getKey(par1ItemStack) + ")":"");
+		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != 0?" ("+getKey(par1ItemStack) + ")":"");
 	}
 	
 	@Override

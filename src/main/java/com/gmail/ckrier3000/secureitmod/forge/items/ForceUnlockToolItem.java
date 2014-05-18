@@ -1,5 +1,6 @@
 package com.gmail.ckrier3000.secureitmod.forge.items;
 
+import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
@@ -9,7 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ForceUnlockToolItem extends Item {
+public class ForceUnlockToolItem extends Item implements InteractProxy {
 	public ForceUnlockToolItem() {
 		setMaxStackSize(1);
 		setUnlocalizedName("SIUnlocker");
@@ -22,7 +23,6 @@ public class ForceUnlockToolItem extends Item {
 			SecureItMod.instance.unlock(world, x, y, z);
 			MessageUtil.sendMessage(player, "Unlocked!");
 		}
-		
 
 		return false;
 	}
@@ -30,6 +30,13 @@ public class ForceUnlockToolItem extends Item {
 	@Override
 	public boolean canItemEditBlocks() {
 		return false;
+	}
+
+	@Override
+	public void interactProxy(InteractData data) {
+		if (data.isServer)
+			if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z))
+				SecureItMod.instance.unlock(data.world, data.x, data.y, data.z);
 	}
 	
 	
