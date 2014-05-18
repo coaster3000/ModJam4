@@ -7,7 +7,6 @@
 "credits": "Special thanks to the modjam team for the support!",
 "mcversion": "${mcversion}",
 "authors": [coaster3000],
-"dependencies": [
-         "mod_MinecraftForge"
-]
+"dependencies": ["mod_MinecraftForge"]
 }
+]

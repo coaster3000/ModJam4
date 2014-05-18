@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -26,6 +27,7 @@ import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
+import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -74,7 +76,7 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 		if (data.player.isSneaking())
 			if (data.block instanceof BlockChest) {
 				if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z))
-					MessageUtil.sendMessage(data.player, "Cannot lock already locked chest!");
+					MessageUtil.sendMessage(data.player, LanguageRegistry.instance().getStringLocalization("mod.secureit.message.alreadLocked"));
 				else {
 					int	lock = SecureItMod.instance.lock(data.world, data.x, data.y, data.z, data.player.getUniqueID());
 					
@@ -93,6 +95,9 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 					
 					data.player.inventory.markDirty();
 					data.player.inventoryContainer.detectAndSendChanges();
+					String msg = LanguageRegistry.instance().getStringLocalization("mod.secureit.message.locked");
+					if (!MathHelper.stringNullOrLengthZero(msg))
+						MessageUtil.sendMessage(data.player, msg);
 				}
 				data.cancelEvent = true;
 				return;

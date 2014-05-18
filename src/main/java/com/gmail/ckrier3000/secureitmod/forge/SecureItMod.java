@@ -35,6 +35,7 @@ import com.gmail.ckrier3000.secureitmod.forge.listeners.DebugToolListener;
 import com.gmail.ckrier3000.secureitmod.forge.listeners.InteractListener;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -135,7 +136,6 @@ public class SecureItMod {
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
 		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:SkeletonKey");
 
-		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
 		GameRegistry.registerItem(forceUnlockItem, forceUnlockItem.getUnlocalizedName());
