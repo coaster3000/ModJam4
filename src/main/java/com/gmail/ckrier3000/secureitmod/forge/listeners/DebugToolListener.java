@@ -32,8 +32,8 @@ public class DebugToolListener extends BaseListener {
 		final boolean isServer = !world.isRemote;
 		final Action action = event.action;
 		
-		log.debug(isServer);
-		log.debug(action);
+		log.info(isServer);
+		log.info(action);
 	}
 	
 	
