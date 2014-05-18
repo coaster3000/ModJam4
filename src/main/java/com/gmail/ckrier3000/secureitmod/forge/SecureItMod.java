@@ -58,10 +58,8 @@ public class SecureItMod {
 
 	public static int maxGenRetries = 50;
 	
-	
 	@SidedProxy(serverSide = "com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy", clientSide = "com.gmail.ckrier3000.secureitmod.forge.common.ClientProxy")
 	public static CommonProxy proxy;
-	
 	
 	public static final String WORLDINFO_LOCKS = "SILocks";
 	public static final String WORLDINFO_USEDLOCKS = "SIUsedLockIDS";
@@ -103,8 +101,6 @@ public class SecureItMod {
 	}
 
 	private NBTTagCompound getLocks(World world) {
-//		System.out.println(world.provider.dimensionId + "dim unlock");
-//		System.out.println(world.isRemote + "dim unlock remote");
 		return getLocks(world.provider.dimensionId);
 	}
 
@@ -145,7 +141,6 @@ public class SecureItMod {
 
 	public boolean isLocked(World world, int x, int y, int z) {
 		String id = getLocString(x, y, z);
-//		System.out.println(world.provider.dimensionId + "");
 		return getLocks(world).hasKey(id);
 	}
 
