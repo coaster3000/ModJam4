@@ -89,10 +89,10 @@ public class KeyItem extends Item implements InteractProxy {
 		return true;
 	}
 	
-	@Override
-	public String getItemStackDisplayName(ItemStack par1ItemStack) {
-		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != 0?" ("+getKey(par1ItemStack) + ")":"");
-	}
+//	@Override
+//	public String getItemStackDisplayName(ItemStack par1ItemStack) {
+//		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != 0?" ("+getKey(par1ItemStack) + ")":"");
+//	}
 	
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab,
