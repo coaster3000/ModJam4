@@ -31,15 +31,20 @@ public class SecureItSaveData extends WorldSavedData {
 
 	@Override
 	public void readFromNBT(NBTTagCompound data) {
+		if (data.hasKey(SecureItMod.WORLDINFO_USEDLOCKS, NBT.TAG_INT))
+			usedLockLists.put(id, data.getInteger(SecureItMod.WORLDINFO_USEDLOCKS));
+		if (data.hasKey(SecureItMod.WORLDINFO_LOCKS, NBT.TAG_COMPOUND))
+			lockDataLists.put(id, data.getCompoundTag(SecureItMod.WORLDINFO_LOCKS));
 	}
 	
 
 	@Override
 	public void writeToNBT(NBTTagCompound data) {
-		if (data.hasKey(SecureItMod.WORLDINFO_USEDLOCKS, NBT.TAG_INT))
-			usedLockLists.put(id, data.getInteger(SecureItMod.WORLDINFO_USEDLOCKS));
-		if (data.hasKey(SecureItMod.WORLDINFO_LOCKS, NBT.TAG_LIST))
-			lockDataLists.put(id, data.getCompoundTag(SecureItMod.WORLDINFO_LOCKS));
+		if (usedLockLists.containsKey(id))
+			data.setInteger(SecureItMod.WORLDINFO_USEDLOCKS, usedLockLists.get(id));
+		
+		if (lockDataLists.containsKey(id))
+			data.setTag(SecureItMod.WORLDINFO_LOCKS, lockDataLists.get(id));
 	}
 
 }

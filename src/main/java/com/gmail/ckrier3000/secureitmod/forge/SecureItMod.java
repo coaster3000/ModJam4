@@ -58,8 +58,8 @@ public class SecureItMod {
 
 	public static int maxGenRetries = 50;
 	
-	@SidedProxy(serverSide = "com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy", clientSide = "com.gmail.ckrier3000.secureitmod.forge.common.ClientProxy")
-	public static CommonProxy proxy;
+//	@SidedProxy(serverSide = "com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy", clientSide = "com.gmail.ckrier3000.secureitmod.forge.common.ClientProxy")
+//	public static CommonProxy proxy;
 	
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
@@ -245,9 +245,7 @@ public class SecureItMod {
 			w.mapStorage.setData(SecureItSaveData.NAME + ":" + id, new SecureItSaveData(SecureItSaveData.NAME + ":" + id));
 		
 		NBTTagCompound data = new NBTTagCompound();
-		d.writeToNBT(data);
-		
-		
+//		d.writeToNBT(data);
 
 		// XXX: Not really saving for some dumb reason.
 		if (usedLockLists.containsKey(id))
@@ -257,7 +255,7 @@ public class SecureItMod {
 			data.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
 		
 		d.readFromNBT(data);
-		d.setDirty(true);
+		d.markDirty();
 		w.mapStorage.saveAllData();
 	}
 
