@@ -14,14 +14,12 @@ import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
@@ -59,19 +57,17 @@ public class InteractListener extends BaseListener {
 		if (!(block instanceof BlockChest))
 			return;
 			
-		String lmsg = LanguageRegistry.instance().getStringLocalization("mod.secureit.message.isocked");
-		boolean showLockMsg = false;
 		if (isLocked(world, x, y, z)) {
 			if ((player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass()))) { 
 				event.setCanceled(true);
 				event.useBlock = Result.DENY;
 				
-				showLockMsg = true;
+				MessageUtil.sendMessage(player, "Chest is locked!");
 			} else if (player.getCurrentEquippedItem() == null) {
 				event.setCanceled(true);
 				event.useBlock = Result.DENY;
 				
-				showLockMsg = true;
+				MessageUtil.sendMessage(player, "Chest is locked!");
 			} else {
 				if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy) {
 					((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
@@ -90,9 +86,6 @@ public class InteractListener extends BaseListener {
 			event.useBlock = data.useBlock;
 			event.useItem = data.useItem;
 		}
-		
-		if (showLockMsg && !MathHelper.stringNullOrLengthZero(lmsg))
-			MessageUtil.sendMessage(player, lmsg);
 	}
 	
 	private boolean isLocked(World world, int x, int y, int z) {
