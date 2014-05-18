@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -224,16 +225,24 @@ public class SecureItMod {
 	@SubscribeEvent
 	public void onWorldSave(WorldEvent.Save event) {
 		World w = event.world;
-
+		WorldSavedData d = w.mapStorage.loadData(WorldSavedData.class, "SecureItModData");
+		
 		int id = w.provider.dimensionId;
 		log.info(!w.isRemote);
+		
+		NBTTagCompound data = new NBTTagCompound();
+		d.writeToNBT(data);
+		
+		
 
 		// XXX: Not really saving for some dumb reason.
 		if (usedLockLists.containsKey(id))
-			w.getWorldInfo().getNBTTagCompound().setInteger(WORLDINFO_USEDLOCKS, usedLockLists.get(id));
-		if (lockDataLists.containsKey(id)) {
-			w.getWorldInfo().getNBTTagCompound().setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
-		}
+			data.setInteger(WORLDINFO_USEDLOCKS, usedLockLists.get(id));
+		
+		if (lockDataLists.containsKey(id))
+			data.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
+		
+		
 	}
 
 	@EventHandler
