@@ -1,10 +1,19 @@
 {
-    "modid": "cSecureItMod",
+  "modinfoversion": 2,
+  "modlist": [{
+    "modid": "secureitmod",
     "name": "Secure it Mod",
     "description": "Simple Lock and Key Mod.",
-    "version": "${version}",
-    "credits": "Special thanks to the modjam team for the support!",
-    "mcversion": "${mcversion}",
-    "authors": [coaster3000],
-    "dependencies": ["mod_MinecraftForge"]
+    "url": "",
+    "updateUrl": "",
+    "authors": [ "Coaster3000" ],
+    "credits": "Created by Coaster3000, Lots of informative help by the ModJam participants",
+    "logoFile": "",
+    "screenshots": [],
+    "parent": "",
+    "requiredMods": [ "Forge" , "FML" ],
+    "dependencies": [""],
+    "dependants": [""],
+    "useDependencyInformation": "true"
+  }]
 }
