@@ -131,7 +131,7 @@ public class SecureItMod {
 		
 		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
-		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:forceUnlock");
+		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:SkeletonKey");
 
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
