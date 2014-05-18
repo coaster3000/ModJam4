@@ -1,8 +1,11 @@
 package com.gmail.ckrier3000.secureitmod.forge.listeners;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.message.Message;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
@@ -19,6 +22,7 @@ public class DebugToolListener extends BaseListener {
 	public DebugToolListener() {
 		instance = SecureItMod.instance;
 		log = instance.getLogger();
+		
 	}
 	
 	@SubscribeEvent
@@ -28,8 +32,8 @@ public class DebugToolListener extends BaseListener {
 		final boolean isServer = !world.isRemote;
 		final Action action = event.action;
 		
-		log.info(isServer);
-		log.info(action);
+		log.debug(isServer);
+		log.debug(action);
 	}
 	
 	
