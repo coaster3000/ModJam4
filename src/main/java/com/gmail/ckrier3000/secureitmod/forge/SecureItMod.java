@@ -29,7 +29,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
-import com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy;
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
 import com.gmail.ckrier3000.secureitmod.forge.listeners.DebugToolListener;
 import com.gmail.ckrier3000.secureitmod.forge.listeners.InteractListener;
@@ -58,9 +57,6 @@ public class SecureItMod {
 	public static Item lockAndKeyItem, keyItem, forceUnlockItem;
 
 	public static int maxGenRetries = 50;
-	
-//	@SidedProxy(serverSide = "com.gmail.ckrier3000.secureitmod.forge.common.CommonProxy", clientSide = "com.gmail.ckrier3000.secureitmod.forge.common.ClientProxy")
-//	public static CommonProxy proxy;
 	
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
 	public static final String COMPOUND_TAG_ID_CHEST_LOCK_OWNER = "owner";
@@ -131,8 +127,8 @@ public class SecureItMod {
 		debugListener = new DebugToolListener();
 		interactListener = new InteractListener();
 		
-		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:lockAndKey");
-		keyItem = new KeyItem().setTextureName("secureitmod:key");
+		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:LockAndKey");
+		keyItem = new KeyItem().setTextureName("secureitmod:Key");
 		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:SkeletonKey");
 
 		
