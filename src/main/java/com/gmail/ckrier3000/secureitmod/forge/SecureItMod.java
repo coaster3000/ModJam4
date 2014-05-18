@@ -212,13 +212,19 @@ public class SecureItMod {
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
 		World w = event.world;
-		WorldSavedData d = w.mapStorage.loadData(SecureItSaveData.class, SecureItSaveData.NAME);
 		
 		int id = w.provider.dimensionId;
+		WorldSavedData d = w.mapStorage.loadData(SecureItSaveData.class, SecureItSaveData.NAME + ":" + id);
+		
+		final boolean existed = d != null;
+		if (!existed)
+			w.mapStorage.setData(SecureItSaveData.NAME + ":" + id, new SecureItSaveData(SecureItSaveData.NAME + ":" + id));
+		
+		
 		log.info(!w.isRemote);
 		
 		NBTTagCompound data = new NBTTagCompound();
-		d.writeToNBT(data);
+//		d.writeToNBT(data); THIS WILL MAKE LOCKS REAPPEAR!
 		
 		if (data.hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
 			usedLockLists.put(id, data.getInteger(WORLDINFO_USEDLOCKS));
@@ -229,10 +235,14 @@ public class SecureItMod {
 	@SubscribeEvent
 	public void onWorldSave(WorldEvent.Save event) {
 		World w = event.world;
-		WorldSavedData d = w.mapStorage.loadData(WorldSavedData.class, "SecureItModData");
 		
 		int id = w.provider.dimensionId;
-		log.info(!w.isRemote);
+		
+		WorldSavedData d = w.mapStorage.loadData(WorldSavedData.class, SecureItSaveData.NAME + ":" + id);
+		
+		final boolean existed = d != null;
+		if (!existed)
+			w.mapStorage.setData(SecureItSaveData.NAME + ":" + id, new SecureItSaveData(SecureItSaveData.NAME + ":" + id));
 		
 		NBTTagCompound data = new NBTTagCompound();
 		d.writeToNBT(data);
@@ -247,6 +257,8 @@ public class SecureItMod {
 			data.setTag(WORLDINFO_LOCKS, lockDataLists.get(id));
 		
 		d.readFromNBT(data);
+		d.setDirty(true);
+		w.mapStorage.saveAllData();
 	}
 
 	@EventHandler

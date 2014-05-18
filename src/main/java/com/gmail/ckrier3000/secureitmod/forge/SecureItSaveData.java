@@ -18,9 +18,13 @@ public class SecureItSaveData extends WorldSavedData {
 	public SecureItSaveData(String par1Str) {
 		super(par1Str);
 		
-		id = Integer.parseInt(par1Str.split(":")[1]);
-		
-		
+		try {
+			id = Integer.parseInt(par1Str.split(":")[1]);
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("Invalid ID");
+		} catch (ArrayIndexOutOfBoundsException a) {
+			throw new IllegalArgumentException("Wrong name format need one : in name followed by dimension ID");
+		}
 		lockDataLists = SecureItMod.instance.lockDataLists;
 		usedLockLists = SecureItMod.instance.usedLockLists;
 	}
