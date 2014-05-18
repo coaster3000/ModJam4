@@ -4,6 +4,8 @@
     "modid": "secureitmod",
     "name": "Secure it Mod",
     "description": "Simple Lock and Key Mod.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
     "url": "",
     "updateUrl": "",
     "authors": [ "Coaster3000" ],
@@ -12,8 +14,8 @@
     "screenshots": [],
     "parent": "",
     "requiredMods": [ "Forge" , "FML" ],
-    "dependencies": [""],
-    "dependants": [""],
+    "dependencies": [],
+    "dependants": [],
     "useDependencyInformation": "true"
   }]
 }
