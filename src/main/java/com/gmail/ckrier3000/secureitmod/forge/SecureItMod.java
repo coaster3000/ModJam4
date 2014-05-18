@@ -30,7 +30,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.logging.log4j.Logger;
 
 import com.gmail.ckrier3000.secureitmod.forge.items.*;
-import com.gmail.ckrier3000.secureitmod.forge.listeners.DebugToolListener;
 import com.gmail.ckrier3000.secureitmod.forge.listeners.InteractListener;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
@@ -69,7 +68,6 @@ public class SecureItMod {
 	private Logger log;
 
 	private File modConfigurationDirectory, suggestedConfig;
-	private DebugToolListener debugListener;
 	private InteractListener interactListener;
 	
 	public Integer getLastID(int did) {
@@ -124,7 +122,6 @@ public class SecureItMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		debugListener = new DebugToolListener();
 		interactListener = new InteractListener();
 		
 		lockAndKeyItem = new LockAndKeyItem().setTextureName("secureitmod:LockAndKey");
@@ -191,7 +188,7 @@ public class SecureItMod {
 		if (key == -1)
 			key = getNewLockID(world);
 		
-		log.info(key);
+		log.debug(key);
 		String id = getLocString(x, y, z);
 		NBTTagCompound t = new NBTTagCompound();
 		
@@ -234,7 +231,6 @@ public class SecureItMod {
 	@EventHandler
 	public void onComplete(FMLLoadCompleteEvent event) {
 		interactListener.register();
-		debugListener.register();
 		
 		MinecraftForge.EVENT_BUS.register(this);
 	}
@@ -250,8 +246,6 @@ public class SecureItMod {
 		if (!existed)
 			w.mapStorage.setData(SecureItSaveData.NAME + ":" + id, new SecureItSaveData(SecureItSaveData.NAME + ":" + id));
 		
-		
-		log.info(!w.isRemote);
 		
 		NBTTagCompound data = new NBTTagCompound();
 //		d.writeToNBT(data); THIS WILL MAKE LOCKS REAPPEAR!
