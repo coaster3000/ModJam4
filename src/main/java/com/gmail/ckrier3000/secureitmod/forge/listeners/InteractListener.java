@@ -12,6 +12,7 @@ import com.gmail.ckrier3000.secureitmod.forge.items.KeyItem;
 import com.gmail.ckrier3000.secureitmod.forge.items.LockAndKeyItem;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -48,27 +49,26 @@ public class InteractListener extends BaseListener {
 		Block block = world.getBlock(x, y, z);
 		
 		EntityPlayer player = event.entityPlayer;
-		//Our needed specifics.
 		final boolean isServer = !world.isRemote;
-		final boolean isChest = block instanceof BlockChest;
-		final boolean isServerPlayer = player instanceof EntityPlayerMP;
 		
-		InteractData data = new InteractData(event);
-		
-		if (!isServer || !isChest || !isServerPlayer) //skips
+		if (!isServer)
 			return;
-		
-		if (isLocked(world, x, y, z)) {
-			if (player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass())) {
+		//Our needed specifics.
+		InteractData data = new InteractData(event);
+		if (block instanceof BlockChest)
+			if (isLocked(world, x, y, z) && (player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass()))) {
 				event.setCanceled(true);
+				event.useBlock = Result.DENY;
 				
 				MessageUtil.sendMessage(player, "Chest is locked!");
 			} else {
-				if (hasInterface(player.getCurrentEquippedItem().getItem().getClass(), InteractProxy.class))
+				if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy)
 					((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
 			}
-		}
-	
+		
+		event.setCanceled(data.cancelEvent);
+		event.useBlock = data.useBlock;
+		event.useItem = data.useItem;
 	}
 	
 	private boolean hasInterface(Class c, Class i) {

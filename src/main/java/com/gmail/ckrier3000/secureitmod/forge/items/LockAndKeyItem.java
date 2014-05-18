@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,6 +65,14 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 
 	public void interactProxy(InteractData data) {
 		
+		instance().getLogger().info(data.isServer);
+		instance().getLogger().info(data.isServerPlayer);
+		
+		if (!data.isServer || !data.isServerPlayer)
+			return;
+		EntityPlayerMP playerS = ((EntityPlayerMP)data.player);
+		
+		ItemStack stack = data.player.getCurrentEquippedItem();
 		if (data.player.isSneaking())
 			if (data.block instanceof BlockChest) {
 				if (SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z))
@@ -78,16 +87,17 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 					key.stackTagCompound.setString(KeyItem.COMPOUND_TAG_KEY_CREATOR, data.player.getDisplayName());
 					
 					if (!data.player.inventory.addItemStackToInventory(key.copy()))
-						data.player.entityDropItem(key, 1);
+						data.player.entityDropItem(key.copy(), 1);
 					
 					stack.stackSize--;
 					data.player.inventory.setItemStack(stack.copy());
 				}
 				data.player.inventory.markDirty();
+				
 				data.cancelEvent = true;
 				return;
 			}
-		data.cancelEvent =  SecureItMod.instance.isLocked(world, x, y, z);
+		data.cancelEvent =  SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z);
 	}
 	
 //	@Override
