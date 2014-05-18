@@ -5,3 +5,10 @@ Chests are locked and are still vanilla blocks.
 
 EXTRA DETAILS
 --------------------------------
+Keys are unique per chest. Shift clicking with them will remove locks and give back a key and lock combo.
+Only non vanilla thing in here is the extra items added with mod which are.
+	Key
+	Key And Lock
+	Unlocking Tool named Skeleton Key for fun.
+	
+Currently this only works with creative spawning. You currently cannot craft a key. I Will have that available after modjam most likely.

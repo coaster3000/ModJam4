@@ -323,12 +323,25 @@ public class SecureItMod {
 	}
 	
 	private Location[] getAdjacentLocks(Location l) {
-		return new Location[0];
+		List<Location> locks = new ArrayList<SecureItMod.Location>();
+		
+		for (Location l2 : new Location[]{new Location(l.world, l.x+1, l.y, l.z),
+				new Location(l.world, l.x-1, l.y, l.z),
+				new Location(l.world, l.x, l.y, l.z+1),
+				new Location(l.world, l.x, l.y, l.z-1)})
+			if (_isLocked(l2.world, l2.x, l2.y, l2.z))
+				locks.add(l2);
+		
+		return locks.toArray(new Location[locks.size()]);
 	}
 
 	public void unlock(World world, int x, int y, int z) {
 		if (!isLocked(world, x, y, z))
 			return;
+		
+		//XXX: Warning this will unlock chests that are locked via other keys.
+		for (Location l : getAdjacentLocks(new Location(world, x, y, z)))
+			unlock(l.world, l.x, l.y, l.z); //Cannot possibly infinitely loop unless somehow data got put in that way. This will basically cleanup the chest.
 		
 		getLocks(world).removeTag(getLocString(x, y, z));
 	}
