@@ -88,6 +88,11 @@ public class InteractListener extends BaseListener {
 		}
 	}
 	
+	private boolean isLocked(World world, int x, int y, int z) {
+		return instance.isLocked(world, x, y, z);
+	}
+
+
 	private boolean hasInterface(Class c, Class i) {
 		for (Class ci : c.getInterfaces())
 			if (ci.equals(i))
@@ -98,46 +103,6 @@ public class InteractListener extends BaseListener {
 	private boolean isAnyMatch(Class<?> c) {
 		return c.equals(KeyItem.class) || c.equals(ForceUnlockToolItem.class) || c.equals(LockAndKeyItem.class);
 	}
-
-	private Integer getLastID(int did) {
-		return instance.getLastID(did);
-	}
-
-
-	private Integer getLastID(World world) {
-		return instance.getLastID(world);
-	}
-
-
-	private Integer getLockID(World world, int x, int y, int z) {
-		return instance.getLockID(world, x, y, z);
-	}
-
-
-	private boolean isKey(World world, int x, int y, int z, Integer key) {
-		return instance.isKey(world, x, y, z, key);
-	}
-
-
-	private boolean isLocked(World world, int x, int y, int z) {
-		return instance.isLocked(world, x, y, z);
-	}
-
-
-	private Integer lock(World world, int x, int y, int z, String owner) {
-		return instance.lock(world, x, y, z, owner);
-	}
-
-
-	private Integer lock(World world, int x, int y, int z, UUID owner) {
-		return instance.lock(world, x, y, z, owner);
-	}
-
-
-	private void unlock(World world, int x, int y, int z) {
-		instance.unlock(world, x, y, z);
-	}
-
 
 	@Override
 	public boolean onRegister() {
