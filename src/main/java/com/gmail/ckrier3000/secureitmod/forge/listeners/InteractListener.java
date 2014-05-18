@@ -58,28 +58,32 @@ public class InteractListener extends BaseListener {
 			return;
 			
 		if (isLocked(world, x, y, z)) {
-			if ((player.getCurrentEquippedItem() == null)) 
-				if (!isAnyMatch(player.getCurrentEquippedItem().getItem().getClass())) { 
+			if ((player.getCurrentEquippedItem() == null || !isAnyMatch(player.getCurrentEquippedItem().getItem().getClass()))) { 
+				event.setCanceled(true);
+				event.useBlock = Result.DENY;
 				
-					event.setCanceled(true);
-					event.useBlock = Result.DENY;
+				MessageUtil.sendMessage(player, "Chest is locked!");
+			} else if (player.getCurrentEquippedItem() == null) {
+				event.setCanceled(true);
+				event.useBlock = Result.DENY;
+				
+				MessageUtil.sendMessage(player, "Chest is locked!");
+			} else {
+				if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy) {
+					((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
 					
-					MessageUtil.sendMessage(player, "Chest is locked!");
-				} else {
-					event.setCanceled(true);
-					event.useBlock = Result.DENY;
+					event.setCanceled(data.cancelEvent);
+					event.useBlock = data.useBlock;
+					event.useItem = data.useItem;
 					
-					MessageUtil.sendMessage(player, "Chest is locked!");
-				}
-		} else if (player.getCurrentEquippedItem() != null) {
-			if (player.getCurrentEquippedItem().getItem() instanceof InteractProxy) {
-				((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
-				
-				event.setCanceled(data.cancelEvent);
-				event.useBlock = data.useBlock;
-				event.useItem = data.useItem;
-				
-			} else event.setCanceled(isLocked(world, x, y, z));
+				} else event.setCanceled(isLocked(world, x, y, z));
+			}
+		} else if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof InteractProxy) {
+			((InteractProxy)player.getCurrentEquippedItem().getItem()).interactProxy(data);
+			
+			event.setCanceled(data.cancelEvent);
+			event.useBlock = data.useBlock;
+			event.useItem = data.useItem;
 		}
 	}
 	

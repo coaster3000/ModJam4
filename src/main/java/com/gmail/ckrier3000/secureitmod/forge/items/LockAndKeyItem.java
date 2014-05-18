@@ -92,7 +92,7 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 					data.player.inventory.setItemStack(stack.copy());
 					
 					data.player.inventory.markDirty();
-					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
+//					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
 				}
 				data.cancelEvent = true;
 				return;
