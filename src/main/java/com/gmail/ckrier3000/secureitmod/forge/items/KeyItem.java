@@ -43,8 +43,8 @@ public class KeyItem extends Item implements InteractProxy {
 	}
 	
 	public void interactProxy(InteractData data) {
-//		if (!data.isServer || !data.isServerPlayer)
-//			return;
+		if (!data.isServer || !data.isServerPlayer)
+			return;
 		
 		ItemStack stack = data.player.getCurrentEquippedItem();
 		

@@ -213,6 +213,9 @@ public class SecureItMod {
 		int id = w.provider.dimensionId;
 
 		// XXX: Not really loading for some dumb reason...
+		
+		NBTTagCompound data = new NBTTagCompound();
+		
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_USEDLOCKS, NBT.TAG_INT))
 			usedLockLists.put(id, w.getWorldInfo().getNBTTagCompound().getInteger(WORLDINFO_USEDLOCKS));
 		if (w.getWorldInfo().getNBTTagCompound().hasKey(WORLDINFO_LOCKS, NBT.TAG_LIST))
@@ -224,6 +227,7 @@ public class SecureItMod {
 		World w = event.world;
 
 		int id = w.provider.dimensionId;
+		log.info(!w.isRemote);
 
 		// XXX: Not really saving for some dumb reason.
 		if (usedLockLists.containsKey(id))
