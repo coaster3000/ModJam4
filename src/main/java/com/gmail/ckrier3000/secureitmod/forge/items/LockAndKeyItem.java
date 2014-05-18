@@ -26,6 +26,9 @@ import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class LockAndKeyItem extends Item implements InteractProxy {
 	static final String COMPOUND_TAG_ID_CHEST_LOCK = "SILock";
 	static final String COMPOUND_TAG_ID_CHEST_LOCK_ID = "lockID";
@@ -95,6 +98,12 @@ public class LockAndKeyItem extends Item implements InteractProxy {
 				return;
 			}
 		data.cancelEvent =  SecureItMod.instance.isLocked(data.world, data.x, data.y, data.z);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+		par3List.add("Locks a chest on shift click");
 	}
 	
 //	@Override

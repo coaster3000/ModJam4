@@ -15,6 +15,9 @@ import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class KeyItem extends Item implements InteractProxy {
 	public static final String COMPOUND_TAG_KEY_CREATOR = "maker";
 	public static final String COMPOUND_TAG_KEY_ID = "keyID";
@@ -62,7 +65,7 @@ public class KeyItem extends Item implements InteractProxy {
 					if (!data.player.inventory.addItemStackToInventory(lockKey))
 						data.player.dropItem(SecureItMod.lockAndKeyItem, 1);
 					
-					MessageUtil.sendMessage(data.player, "Unlocked chest.");
+					MessageUtil.sendMessage(data.player, "Lock Removed.");
 					data.player.inventory.markDirty();
 					
 //					playerS.sendContainerAndContentsToPlayer(playerS.inventoryContainer, playerS.inventoryContainer.inventoryItemStacks);
@@ -70,7 +73,7 @@ public class KeyItem extends Item implements InteractProxy {
 				}
 				return;
 			} else {
-				MessageUtil.sendMessage(data.player, "Wrong key");
+				MessageUtil.sendMessage(data.player, "Wrong key.");
 				data.cancelEvent = true;
 			}
 		}
@@ -93,6 +96,13 @@ public class KeyItem extends Item implements InteractProxy {
 //	public String getItemStackDisplayName(ItemStack par1ItemStack) {
 //		return super.getItemStackDisplayName(par1ItemStack) + (getKey(par1ItemStack) != 0?" ("+getKey(par1ItemStack) + ")":"");
 //	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+		par3List.add("ID " + getKey(par1ItemStack));
+		par3List.add("Shift click to remote locks");
+	}
 	
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab,

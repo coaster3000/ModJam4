@@ -1,3 +1,8 @@
 item.lockAndKey.name=Lock And Key
 item.key.name=Key
 item.SIUnlocker.name=Skeleton Key
+
+mod.secureit.message.unlock=Removed Lock!
+mod.secureit.message.lock=Applied Lock!
+mod.secureit.message.islocked=Locked!
+mod.secureit.message.alreadyLocked=There is already a lock here!

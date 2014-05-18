@@ -10,6 +10,7 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.Locale;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
@@ -134,6 +135,7 @@ public class SecureItMod {
 		keyItem = new KeyItem().setTextureName("secureitmod:key");
 		forceUnlockItem = new ForceUnlockToolItem().setTextureName("secureitmod:SkeletonKey");
 
+		
 		GameRegistry.registerItem(lockAndKeyItem, lockAndKeyItem.getUnlocalizedName());
 		GameRegistry.registerItem(keyItem, keyItem.getUnlocalizedName());
 		GameRegistry.registerItem(forceUnlockItem, forceUnlockItem.getUnlocalizedName());

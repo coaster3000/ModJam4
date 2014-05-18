@@ -1,5 +1,7 @@
 package com.gmail.ckrier3000.secureitmod.forge.items;
 
+import java.util.List;
+
 import com.gmail.ckrier3000.secureitmod.forge.InteractData;
 import com.gmail.ckrier3000.secureitmod.forge.SecureItMod;
 import com.gmail.ckrier3000.secureitmod.util.MessageUtil;
@@ -21,7 +23,7 @@ public class ForceUnlockToolItem extends Item implements InteractProxy {
 	public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		if (SecureItMod.instance.isLocked(world, x, y, z)) {
 			SecureItMod.instance.unlock(world, x, y, z);
-			MessageUtil.sendMessage(player, "Unlocked!");
+			MessageUtil.sendMessage(player, "Lock Removed!");
 		}
 
 		return false;
@@ -32,6 +34,12 @@ public class ForceUnlockToolItem extends Item implements InteractProxy {
 		return false;
 	}
 
+	
+	@Override
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4) {
+		par3List.add("Force unlocks a locked chest");
+	}
+	
 	@Override
 	public void interactProxy(InteractData data) {
 		if (data.isServer)
